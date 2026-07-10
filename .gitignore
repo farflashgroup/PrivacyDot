@@ -1,0 +1,12 @@
+bin/
+obj/
+.vs/
+.vscode/
+*.user
+*.suo
+*.pdb
+*.nupkg
+TestResults/
+installer/payload/
+installer/*.SED
+installer/*.cab

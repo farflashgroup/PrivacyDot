@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="PrivacyDot.Tests/PrivacyDot.Tests.csproj" />
+  <Project Path="PrivacyDot/PrivacyDot.csproj" />
+</Solution>
