@@ -11,6 +11,7 @@
 <p align="center">
   <a href="https://github.com/farflashgroup/PrivacyDot/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/farflashgroup/PrivacyDot?sort=semver"></a>
   <a href="https://github.com/farflashgroup/PrivacyDot/actions"><img alt="Build" src="https://img.shields.io/github/actions/workflow/status/farflashgroup/PrivacyDot/build.yml?branch=main"></a>
+  <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT-green"></a>
   <img alt="Platform" src="https://img.shields.io/badge/platform-Windows%207%20SP1%2B-0078d4">
   <img alt=".NET Framework" src="https://img.shields.io/badge/.NET%20Framework-4.8-512bd4">
 </p>
@@ -23,6 +24,8 @@ PrivacyDot sits in the Windows notification area and gives you a quick visual re
 - Split green/orange: both detected
 
 Left-click the dot to see the apps currently detected under **Microphone** and **Camera**. Right-click for refresh, Windows privacy settings, Start with Windows, and Exit.
+
+PrivacyDot follows your Windows app theme when showing its popup and tray menu, with dark mode support on Windows versions that expose the app-theme setting.
 
 ## Install
 
@@ -63,3 +66,7 @@ The installer builder uses the Windows IExpress tool included with Windows and w
 ## Privacy
 
 PrivacyDot does not collect telemetry, phone home, or send device usage anywhere. It reads local Windows APIs and registry usage records on the current machine only.
+
+## License
+
+PrivacyDot is open source under the [MIT License](LICENSE).

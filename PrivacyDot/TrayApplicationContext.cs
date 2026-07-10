@@ -12,6 +12,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
     private readonly ToolStripMenuItem _startupItem;
     private UsagePopupForm? _popup;
     private Icon? _currentIcon;
+    private ThemePalette _theme = ThemePalette.Current;
     private bool _disposed;
 
     public TrayApplicationContext()
@@ -57,7 +58,10 @@ internal sealed class TrayApplicationContext : ApplicationContext
 
     private ContextMenuStrip BuildMenu()
     {
-        var menu = new ContextMenuStrip();
+        var menu = new ContextMenuStrip
+        {
+            ShowImageMargin = true
+        };
 
         menu.Items.Add(_statusItem);
         menu.Items.Add(new ToolStripSeparator());
@@ -68,6 +72,8 @@ internal sealed class TrayApplicationContext : ApplicationContext
         menu.Items.Add(_startupItem);
         menu.Items.Add(new ToolStripSeparator());
         menu.Items.Add("Exit", null, (_, _) => ExitApplication());
+
+        ApplyMenuTheme(menu);
 
         return menu;
     }
@@ -104,6 +110,35 @@ internal sealed class TrayApplicationContext : ApplicationContext
     private void HandleMenuOpening(object? sender, CancelEventArgs e)
     {
         _startupItem.Checked = StartupManager.IsEnabled();
+        ApplyMenuTheme(_menu);
+    }
+
+    private void ApplyMenuTheme(ContextMenuStrip menu)
+    {
+        _theme = ThemePalette.Current;
+
+        menu.BackColor = _theme.MenuBack;
+        menu.ForeColor = _theme.PrimaryText;
+        menu.Renderer = new ThemedToolStripRenderer(_theme);
+
+        foreach (ToolStripItem item in menu.Items)
+        {
+            ApplyMenuItemTheme(item);
+        }
+    }
+
+    private void ApplyMenuItemTheme(ToolStripItem item)
+    {
+        item.BackColor = _theme.MenuBack;
+        item.ForeColor = item.Enabled ? _theme.PrimaryText : _theme.DisabledText;
+
+        if (item is ToolStripMenuItem menuItem)
+        {
+            foreach (ToolStripItem child in menuItem.DropDownItems)
+            {
+                ApplyMenuItemTheme(child);
+            }
+        }
     }
 
     private void ShowUsagePopup()

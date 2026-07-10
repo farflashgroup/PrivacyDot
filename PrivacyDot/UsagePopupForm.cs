@@ -12,10 +12,12 @@ internal sealed class UsagePopupForm : Form
     private readonly Font _itemFont;
     private readonly Font _detailFont;
     private DeviceUsageSnapshot _snapshot;
+    private ThemePalette _theme;
 
     public UsagePopupForm(DeviceUsageSnapshot snapshot)
     {
         _snapshot = snapshot;
+        _theme = ThemePalette.Current;
         var baseFont = SystemFonts.MessageBoxFont ?? Control.DefaultFont;
         _titleFont = new Font(baseFont, FontStyle.Bold);
         _sectionFont = new Font(baseFont, FontStyle.Bold);
@@ -23,7 +25,6 @@ internal sealed class UsagePopupForm : Form
         _detailFont = new Font(baseFont.FontFamily, Math.Max(7.5f, baseFont.Size - 1f));
 
         AutoScaleMode = AutoScaleMode.Dpi;
-        BackColor = SystemColors.Window;
         FormBorderStyle = FormBorderStyle.None;
         ShowInTaskbar = false;
         StartPosition = FormStartPosition.Manual;
@@ -33,11 +34,11 @@ internal sealed class UsagePopupForm : Form
         _scrollHost = new Panel
         {
             Dock = DockStyle.Fill,
-            AutoScroll = true,
-            BackColor = SystemColors.Window
+            AutoScroll = true
         };
 
         Controls.Add(_scrollHost);
+        ApplyTheme();
         Rebuild();
     }
 
@@ -85,7 +86,7 @@ internal sealed class UsagePopupForm : Form
     {
         base.OnPaint(e);
 
-        using var borderPen = new Pen(Color.FromArgb(170, SystemColors.ControlDark));
+        using var borderPen = new Pen(_theme.Border);
         e.Graphics.DrawRectangle(borderPen, 0, 0, Width - 1, Height - 1);
     }
 
@@ -104,6 +105,8 @@ internal sealed class UsagePopupForm : Form
 
     private void Rebuild()
     {
+        _theme = ThemePalette.Current;
+        ApplyTheme();
         _scrollHost.SuspendLayout();
         _scrollHost.Controls.Clear();
 
@@ -111,7 +114,7 @@ internal sealed class UsagePopupForm : Form
         {
             AutoSize = true,
             AutoSizeMode = AutoSizeMode.GrowAndShrink,
-            BackColor = SystemColors.Window,
+            BackColor = _theme.PanelBack,
             ColumnCount = 1,
             Dock = DockStyle.Top,
             Padding = new Padding(14, 12, 14, 14)
@@ -120,8 +123,8 @@ internal sealed class UsagePopupForm : Form
         layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
         _scrollHost.Controls.Add(layout);
 
-        layout.Controls.Add(CreateLabel("Privacy Dot", _titleFont, SystemColors.ControlText, 0));
-        layout.Controls.Add(CreateLabel(_snapshot.StatusText, _detailFont, SystemColors.GrayText, 3));
+        layout.Controls.Add(CreateLabel("Privacy Dot", _titleFont, _theme.PrimaryText, 0));
+        layout.Controls.Add(CreateLabel(_snapshot.StatusText, _detailFont, _theme.SecondaryText, 3));
 
         AddSpacer(layout, 10);
         AddSection(layout, "Microphone", Color.FromArgb(36, 211, 102), _snapshot.MicrophoneApps);
@@ -134,6 +137,12 @@ internal sealed class UsagePopupForm : Form
 
         _scrollHost.ResumeLayout();
         Invalidate();
+    }
+
+    private void ApplyTheme()
+    {
+        BackColor = _theme.WindowBack;
+        _scrollHost.BackColor = _theme.PanelBack;
     }
 
     private void AddSection(
@@ -156,14 +165,14 @@ internal sealed class UsagePopupForm : Form
 
         if (entries.Count == 0)
         {
-            layout.Controls.Add(CreateLabel("No apps currently using this device.", _itemFont, SystemColors.GrayText, 0));
+            layout.Controls.Add(CreateLabel("No apps currently using this device.", _itemFont, _theme.SecondaryText, 0));
             return;
         }
 
         foreach (var entry in entries)
         {
-            layout.Controls.Add(CreateLabel(entry.DisplayName, _itemFont, SystemColors.ControlText, 2));
-            layout.Controls.Add(CreateLabel(CompactIdentity(entry), _detailFont, SystemColors.GrayText, 0));
+            layout.Controls.Add(CreateLabel(entry.DisplayName, _itemFont, _theme.PrimaryText, 2));
+            layout.Controls.Add(CreateLabel(CompactIdentity(entry), _detailFont, _theme.SecondaryText, 0));
         }
     }
 
