@@ -27,6 +27,12 @@ Left-click the dot to see the apps currently detected under **Microphone** and *
 
 PrivacyDot follows your Windows app theme when showing its popup and tray menu, with dark mode support on Windows versions that expose the app-theme setting.
 
+## Screenshots
+
+| Dark mode | Light mode |
+| --- | --- |
+| <img src="docs/screenshots/popup-dark.png" alt="PrivacyDot popup in dark mode" width="390"> | <img src="docs/screenshots/popup-light.png" alt="PrivacyDot popup in light mode" width="390"> |
+
 ## Install
 
 Download the latest `PrivacyDotSetup.exe` from the [releases page](https://github.com/farflashgroup/PrivacyDot/releases/latest).

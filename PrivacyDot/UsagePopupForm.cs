@@ -12,12 +12,14 @@ internal sealed class UsagePopupForm : Form
     private readonly Font _itemFont;
     private readonly Font _detailFont;
     private DeviceUsageSnapshot _snapshot;
+    private readonly ThemePalette? _themeOverride;
     private ThemePalette _theme;
 
-    public UsagePopupForm(DeviceUsageSnapshot snapshot)
+    public UsagePopupForm(DeviceUsageSnapshot snapshot, ThemePalette? themeOverride = null)
     {
         _snapshot = snapshot;
-        _theme = ThemePalette.Current;
+        _themeOverride = themeOverride;
+        _theme = ResolveTheme();
         var baseFont = SystemFonts.MessageBoxFont ?? Control.DefaultFont;
         _titleFont = new Font(baseFont, FontStyle.Bold);
         _sectionFont = new Font(baseFont, FontStyle.Bold);
@@ -105,7 +107,7 @@ internal sealed class UsagePopupForm : Form
 
     private void Rebuild()
     {
-        _theme = ThemePalette.Current;
+        _theme = ResolveTheme();
         ApplyTheme();
         _scrollHost.SuspendLayout();
         _scrollHost.Controls.Clear();
@@ -143,6 +145,11 @@ internal sealed class UsagePopupForm : Form
     {
         BackColor = _theme.WindowBack;
         _scrollHost.BackColor = _theme.PanelBack;
+    }
+
+    private ThemePalette ResolveTheme()
+    {
+        return _themeOverride ?? ThemePalette.Current;
     }
 
     private void AddSection(
