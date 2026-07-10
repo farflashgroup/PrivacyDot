@@ -9,6 +9,10 @@
     <LangVersion>latest</LangVersion>
     <AssemblyName>PrivacyDot</AssemblyName>
     <RootNamespace>PrivacyDot</RootNamespace>
+    <ApplicationIcon>Assets\PrivacyDot.ico</ApplicationIcon>
+    <Version>0.1.1</Version>
+    <Authors>PrivacyDot contributors</Authors>
+    <Description>A tiny Windows tray privacy indicator for microphone and camera activity.</Description>
   </PropertyGroup>
 
   <ItemGroup>
