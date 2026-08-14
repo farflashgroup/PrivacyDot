@@ -15,6 +15,7 @@ internal static class Program
             return;
         }
 
+        Localization.Initialize();
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
         Application.Run(new TrayApplicationContext());

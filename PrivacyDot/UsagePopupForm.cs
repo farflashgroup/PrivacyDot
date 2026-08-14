@@ -13,12 +13,17 @@ internal sealed class UsagePopupForm : Form
     private readonly Font _detailFont;
     private DeviceUsageSnapshot _snapshot;
     private readonly ThemePalette? _themeOverride;
+    private readonly bool _closeOnDeactivate;
     private ThemePalette _theme;
 
-    public UsagePopupForm(DeviceUsageSnapshot snapshot, ThemePalette? themeOverride = null)
+    public UsagePopupForm(
+        DeviceUsageSnapshot snapshot,
+        ThemePalette? themeOverride = null,
+        bool closeOnDeactivate = true)
     {
         _snapshot = snapshot;
         _themeOverride = themeOverride;
+        _closeOnDeactivate = closeOnDeactivate;
         _theme = ResolveTheme();
         var baseFont = SystemFonts.MessageBoxFont ?? Control.DefaultFont;
         _titleFont = new Font(baseFont, FontStyle.Bold);
@@ -70,7 +75,11 @@ internal sealed class UsagePopupForm : Form
     protected override void OnDeactivate(EventArgs e)
     {
         base.OnDeactivate(e);
-        Close();
+
+        if (_closeOnDeactivate)
+        {
+            Close();
+        }
     }
 
     protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -109,6 +118,7 @@ internal sealed class UsagePopupForm : Form
     {
         _theme = ResolveTheme();
         ApplyTheme();
+        ApplyReadingDirection();
         _scrollHost.SuspendLayout();
         _scrollHost.Controls.Clear();
 
@@ -119,19 +129,28 @@ internal sealed class UsagePopupForm : Form
             BackColor = _theme.PanelBack,
             ColumnCount = 1,
             Dock = DockStyle.Top,
-            Padding = new Padding(14, 12, 14, 14)
+            Padding = new Padding(14, 12, 14, 14),
+            RightToLeft = Localization.IsRightToLeft ? RightToLeft.Yes : RightToLeft.No
         };
 
         layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
         _scrollHost.Controls.Add(layout);
 
-        layout.Controls.Add(CreateLabel("Privacy Dot", _titleFont, _theme.PrimaryText, 0));
+        layout.Controls.Add(CreateLabel(Localization.Get(AppText.AppName), _titleFont, _theme.PrimaryText, 0));
         layout.Controls.Add(CreateLabel(_snapshot.StatusText, _detailFont, _theme.SecondaryText, 3));
 
         AddSpacer(layout, 10);
-        AddSection(layout, "Microphone", Color.FromArgb(36, 211, 102), _snapshot.MicrophoneApps);
+        AddSection(
+            layout,
+            Localization.Get(AppText.Microphone),
+            Color.FromArgb(36, 211, 102),
+            _snapshot.MicrophoneApps);
         AddSpacer(layout, 10);
-        AddSection(layout, "Camera", Color.FromArgb(255, 149, 0), _snapshot.CameraApps);
+        AddSection(
+            layout,
+            Localization.Get(AppText.Camera),
+            Color.FromArgb(255, 149, 0),
+            _snapshot.CameraApps);
 
         var preferred = layout.GetPreferredSize(new Size(PopupWidth - 2, 0));
         ClientSize = new Size(PopupWidth, Math.Min(MaxPopupHeight, preferred.Height + 2));
@@ -145,6 +164,14 @@ internal sealed class UsagePopupForm : Form
     {
         BackColor = _theme.WindowBack;
         _scrollHost.BackColor = _theme.PanelBack;
+    }
+
+    private void ApplyReadingDirection()
+    {
+        var direction = Localization.IsRightToLeft ? RightToLeft.Yes : RightToLeft.No;
+        RightToLeft = direction;
+        RightToLeftLayout = Localization.IsRightToLeft;
+        _scrollHost.RightToLeft = direction;
     }
 
     private ThemePalette ResolveTheme()
@@ -165,6 +192,7 @@ internal sealed class UsagePopupForm : Form
             ForeColor = accentColor,
             Margin = new Padding(0, 0, 0, 4),
             MaximumSize = new Size(PopupWidth - 32, 0),
+            RightToLeft = Localization.IsRightToLeft ? RightToLeft.Yes : RightToLeft.No,
             Text = title
         };
 
@@ -172,7 +200,11 @@ internal sealed class UsagePopupForm : Form
 
         if (entries.Count == 0)
         {
-            layout.Controls.Add(CreateLabel("No apps currently using this device.", _itemFont, _theme.SecondaryText, 0));
+            layout.Controls.Add(CreateLabel(
+                Localization.Get(AppText.NoAppsUsingDevice),
+                _itemFont,
+                _theme.SecondaryText,
+                0));
             return;
         }
 
@@ -201,6 +233,7 @@ internal sealed class UsagePopupForm : Form
             ForeColor = color,
             Margin = new Padding(0, topMargin, 0, 0),
             MaximumSize = new Size(PopupWidth - 32, 0),
+            RightToLeft = Localization.IsRightToLeft ? RightToLeft.Yes : RightToLeft.No,
             Text = text
         };
     }

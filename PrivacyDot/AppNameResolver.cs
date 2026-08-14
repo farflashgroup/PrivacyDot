@@ -96,7 +96,7 @@ internal static class AppNameResolver
     {
         if (string.IsNullOrWhiteSpace(value))
         {
-            return "Unknown app";
+            return Localization.Get(AppText.UnknownApp);
         }
 
         var builder = new StringBuilder();

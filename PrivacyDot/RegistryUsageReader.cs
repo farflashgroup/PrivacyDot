@@ -6,6 +6,8 @@ namespace PrivacyDot;
 internal sealed class RegistryUsageReader
 {
     private const string ConsentStorePath = @"Software\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore";
+    private const int MaximumTraversalDepth = 8;
+    private const int MaximumSubKeysPerCapability = 4096;
 
     public IReadOnlyList<DeviceUsageEntry> GetActiveUsage()
     {
@@ -28,7 +30,8 @@ internal sealed class RegistryUsageReader
                 return;
             }
 
-            ReadSubKeys(entries, kind, capabilityKey);
+            var inspectedSubKeys = 0;
+            ReadSubKeys(entries, kind, capabilityKey, depth: 0, ref inspectedSubKeys);
         }
         catch (Exception ex) when (ex is IOException or SecurityException or UnauthorizedAccessException)
         {
@@ -36,10 +39,27 @@ internal sealed class RegistryUsageReader
         }
     }
 
-    private static void ReadSubKeys(List<DeviceUsageEntry> entries, DeviceKind kind, RegistryKey parentKey)
+    private static void ReadSubKeys(
+        List<DeviceUsageEntry> entries,
+        DeviceKind kind,
+        RegistryKey parentKey,
+        int depth,
+        ref int inspectedSubKeys)
     {
+        if (depth >= MaximumTraversalDepth || inspectedSubKeys >= MaximumSubKeysPerCapability)
+        {
+            return;
+        }
+
         foreach (var subKeyName in parentKey.GetSubKeyNames())
         {
+            if (inspectedSubKeys >= MaximumSubKeysPerCapability)
+            {
+                return;
+            }
+
+            inspectedSubKeys++;
+
             try
             {
                 using var subKey = parentKey.OpenSubKey(subKeyName);
@@ -60,7 +80,7 @@ internal sealed class RegistryUsageReader
                     entries.Add(entry);
                 }
 
-                ReadSubKeys(entries, kind, subKey);
+                ReadSubKeys(entries, kind, subKey, depth + 1, ref inspectedSubKeys);
             }
             catch (Exception ex) when (ex is IOException or SecurityException or UnauthorizedAccessException)
             {

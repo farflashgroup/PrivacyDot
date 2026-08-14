@@ -36,11 +36,13 @@ internal static class ProcessUsageResolver
     {
         try
         {
-            return string.IsNullOrWhiteSpace(process.ProcessName) ? "Unknown app" : process.ProcessName;
+            return string.IsNullOrWhiteSpace(process.ProcessName)
+                ? Localization.Get(AppText.UnknownApp)
+                : process.ProcessName;
         }
         catch
         {
-            return "Unknown app";
+            return Localization.Get(AppText.UnknownApp);
         }
     }
 

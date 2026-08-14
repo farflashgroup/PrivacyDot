@@ -24,5 +24,9 @@ if (-not (Test-Path $programsDir)) {
     New-Item -ItemType Directory -Path $programsDir | Out-Null
 }
 
-New-PrivacyDotShortcut (Join-Path $startupDir "Privacy Dot.lnk")
-New-PrivacyDotShortcut (Join-Path $programsDir "Privacy Dot.lnk")
+$legacyShortcutName = "Privacy{0}Dot.lnk" -f [char]32
+Remove-Item -LiteralPath (Join-Path $startupDir $legacyShortcutName) -Force -ErrorAction SilentlyContinue
+Remove-Item -LiteralPath (Join-Path $programsDir $legacyShortcutName) -Force -ErrorAction SilentlyContinue
+
+New-PrivacyDotShortcut (Join-Path $startupDir "PrivacyDot.lnk")
+New-PrivacyDotShortcut (Join-Path $programsDir "PrivacyDot.lnk")

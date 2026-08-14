@@ -24,8 +24,8 @@ internal sealed class DeviceUsageEntry
         {
             return Source switch
             {
-                UsageSource.CoreAudio => "Core Audio",
-                UsageSource.PrivacyRegistry => "Windows Privacy",
+                UsageSource.CoreAudio => Localization.Get(AppText.CoreAudio),
+                UsageSource.PrivacyRegistry => Localization.Get(AppText.WindowsPrivacy),
                 _ => Source.ToString()
             };
         }

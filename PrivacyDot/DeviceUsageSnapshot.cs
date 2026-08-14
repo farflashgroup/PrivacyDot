@@ -32,20 +32,20 @@ internal sealed class DeviceUsageSnapshot : IEquatable<DeviceUsageSnapshot>
         {
             if (IsMicrophoneActive && IsCameraActive)
             {
-                return "Microphone and camera in use";
+                return Localization.Get(AppText.StatusMicrophoneAndCameraInUse);
             }
 
             if (IsMicrophoneActive)
             {
-                return "Microphone in use";
+                return Localization.Get(AppText.StatusMicrophoneInUse);
             }
 
             if (IsCameraActive)
             {
-                return "Camera in use";
+                return Localization.Get(AppText.StatusCameraInUse);
             }
 
-            return "No microphone or camera use detected";
+            return Localization.Get(AppText.StatusNoDeviceUse);
         }
     }
 
@@ -53,7 +53,7 @@ internal sealed class DeviceUsageSnapshot : IEquatable<DeviceUsageSnapshot>
     {
         get
         {
-            var text = $"Privacy Dot: {StatusText}";
+            var text = Localization.Format(AppText.ToolTipFormat, StatusText);
             return text.Length <= 127 ? text : text.Substring(0, 124) + "...";
         }
     }

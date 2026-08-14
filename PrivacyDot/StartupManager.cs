@@ -7,7 +7,7 @@ internal static class StartupManager
 {
     private static string ShortcutPath => Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.Startup),
-        "Privacy Dot.lnk");
+        "PrivacyDot.lnk");
 
     public static bool IsEnabled()
     {

@@ -11,6 +11,8 @@
   <ItemGroup>
     <ProjectReference Include="..\PrivacyDot\PrivacyDot.csproj" />
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net48" Version="1.0.3" PrivateAssets="all" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
 
 </Project>

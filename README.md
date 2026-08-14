@@ -23,9 +23,21 @@ PrivacyDot sits in the Windows notification area and gives you a quick visual re
 - Orange: camera use detected
 - Split green/orange: both detected
 
-Left-click the dot to see the apps currently detected under **Microphone** and **Camera**. Right-click for refresh, Windows privacy settings, Start with Windows, and Exit.
+Left-click the dot to see the apps currently detected under **Microphone** and **Camera**. Right-click for refresh, Windows privacy settings, Settings, and Exit. Settings contains Start with Windows, Language, and update controls.
 
 PrivacyDot follows your Windows app theme when showing its popup and tray menu, with dark mode support on Windows versions that expose the app-theme setting.
+
+## Languages
+
+PrivacyDot follows the Windows display language by default. You can choose a different language from the tray menu under **Language**; the selection is saved for future launches.
+
+The app includes English, French, Spanish, Japanese, Mandarin Chinese (Simplified), Hindi, Modern Standard Arabic, and Russian. Unsupported system languages fall back to English, and Arabic uses a right-to-left layout.
+
+## Updates
+
+PrivacyDot quietly checks the latest stable GitHub release after startup. When a newer version is available, a small localized note appears at the bottom of Settings. Choose **Settings → Check for updates** to review the update and decide whether to download and launch `PrivacyDotSetup.exe`.
+
+Update downloads require TLS 1.2 with certificate-revocation checking, are restricted to the exact release tag and installer path in this repository, and have strict metadata, download-size, and timeout limits. The installer’s size and SHA-256 digest must match GitHub’s release metadata, and Windows Internet-zone provenance is preserved for SmartScreen. PrivacyDot never downloads an update in the background.
 
 ## Screenshots
 
@@ -71,7 +83,11 @@ The installer builder uses the Windows IExpress tool included with Windows and w
 
 ## Privacy
 
-PrivacyDot does not collect telemetry, phone home, or send device usage anywhere. It reads local Windows APIs and registry usage records on the current machine only.
+PrivacyDot does not collect telemetry or send device usage anywhere. It reads local Windows APIs and registry usage records on the current machine only. It contacts GitHub once after startup and when you choose **Check for updates**, and downloads an installer only after you confirm an available update.
+
+## Security
+
+PrivacyDot runs without administrator privileges, bounds registry traversal and all update responses, and uses least-privilege, commit-pinned GitHub Actions. GitHub secret scanning and push protection are enabled for the repository.
 
 ## License
 
