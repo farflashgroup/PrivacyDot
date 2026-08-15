@@ -47,6 +47,7 @@ internal sealed class TrayApplicationContext : ApplicationContext
         _startupItem.Click += (_, _) => ToggleStartup();
         _settingsItem = new ToolStripMenuItem();
         _languageItem = new ToolStripMenuItem();
+        _languageItem.DropDownOpening += HandleLanguageDropDownOpening;
         _systemLanguageItem = new ToolStripMenuItem();
         _systemLanguageItem.Click += (_, _) => ChangeLanguage(null);
         _languageItem.DropDownItems.Add(_systemLanguageItem);
@@ -172,6 +173,57 @@ internal sealed class TrayApplicationContext : ApplicationContext
         _startupItem.Checked = StartupManager.IsEnabled();
         ApplyLocalizedText(_monitor.Current);
         ApplyMenuTheme(_menu);
+    }
+
+    private void HandleLanguageDropDownOpening(object? sender, EventArgs e)
+    {
+        var owner = _languageItem.Owner;
+
+        if (owner is null)
+        {
+            return;
+        }
+
+        var itemLocation = owner.PointToScreen(_languageItem.Bounds.Location);
+        var itemBounds = new Rectangle(itemLocation, _languageItem.Bounds.Size);
+        var workingArea = Screen.FromRectangle(itemBounds).WorkingArea;
+        var dropDownSize = _languageItem.DropDown.GetPreferredSize(Size.Empty);
+        _languageItem.DropDownDirection = ChooseLanguageDropDownDirection(
+            itemBounds,
+            dropDownSize,
+            workingArea,
+            Localization.IsRightToLeft);
+    }
+
+    internal static ToolStripDropDownDirection ChooseLanguageDropDownDirection(
+        Rectangle itemBounds,
+        Size dropDownSize,
+        Rectangle workingArea,
+        bool preferLeft)
+    {
+        var spaceOnLeft = Math.Max(0, itemBounds.Left - workingArea.Left);
+        var spaceOnRight = Math.Max(0, workingArea.Right - itemBounds.Right);
+        var fitsOnLeft = dropDownSize.Width <= spaceOnLeft;
+        var fitsOnRight = dropDownSize.Width <= spaceOnRight;
+
+        if (fitsOnLeft && fitsOnRight)
+        {
+            return preferLeft ? ToolStripDropDownDirection.Left : ToolStripDropDownDirection.Right;
+        }
+
+        if (fitsOnLeft)
+        {
+            return ToolStripDropDownDirection.Left;
+        }
+
+        if (fitsOnRight)
+        {
+            return ToolStripDropDownDirection.Right;
+        }
+
+        return spaceOnLeft > spaceOnRight
+            ? ToolStripDropDownDirection.Left
+            : ToolStripDropDownDirection.Right;
     }
 
     private void ApplyLocalizedText(DeviceUsageSnapshot snapshot)

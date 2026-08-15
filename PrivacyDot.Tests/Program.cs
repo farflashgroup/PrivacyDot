@@ -1,6 +1,7 @@
 using PrivacyDot;
-using System.Globalization;
+using System.Drawing;
 using System.Drawing.Imaging;
+using System.Globalization;
 using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
@@ -79,6 +80,7 @@ var tests = new (string Name, Action Run)[]
     ("All supported languages have complete translations", TestSupportedTranslations),
     ("Regional cultures resolve to a supported language", TestCultureResolution),
     ("Snapshot status follows the selected language", TestLocalizedSnapshotStatus),
+    ("Tray tooltip respects the .NET Framework length limit", TestTrayToolTipLength),
     ("Standard Arabic uses right-to-left layout", TestArabicReadingDirection),
     ("Popup renders localized French and Arabic text", TestLocalizedPopup),
     ("Updater recognizes a newer stable release", TestNewerReleaseAvailable),
@@ -87,7 +89,8 @@ var tests = new (string Name, Action Run)[]
     ("Updater caps release metadata", TestOversizedReleaseMetadata),
     ("Updater caps streamed installer data", TestInstallerStreamSizeLimit),
     ("Updater downloads and verifies the installer", TestVerifiedInstallerDownload),
-    ("Settings menu contains Language and updater controls", TestSettingsMenuStructure)
+    ("Settings contains the Language submenu and updater controls", TestSettingsMenuStructure),
+    ("Language submenu opens toward available screen space", TestLanguageDropDownDirection)
 };
 
 foreach (var test in tests)
@@ -216,6 +219,45 @@ static void TestLocalizedSnapshotStatus()
         Assert(
             DeviceUsageSnapshot.Empty.StatusText == "マイクまたはカメラの使用は検出されていません",
             $"Unexpected Japanese status: {DeviceUsageSnapshot.Empty.StatusText}");
+    }
+    finally
+    {
+        Localization.SetLanguage(previousCultureName, persist: false);
+    }
+}
+
+static void TestTrayToolTipLength()
+{
+    var previousCultureName = Localization.SelectedCultureName;
+
+    try
+    {
+        foreach (var language in Localization.SupportedLanguages)
+        {
+            Localization.SetLanguage(language.CultureName, persist: false);
+            var toolTip = DeviceUsageSnapshot.Empty.ToolTipText;
+
+            Assert(
+                toolTip.Length <= DeviceUsageSnapshot.MaximumToolTipLength,
+                $"Expected the {language.CultureName} tray tooltip to fit, got {toolTip.Length} characters.");
+        }
+
+        var unicodeText = "PrivacyDot: " + string.Concat(Enumerable.Repeat("😀e\u0301", 40));
+        var limitedUnicodeText = DeviceUsageSnapshot.LimitToolTipText(unicodeText);
+
+        Assert(
+            limitedUnicodeText.Length <= DeviceUsageSnapshot.MaximumToolTipLength,
+            "Expected the Unicode tray tooltip to fit the .NET Framework limit.");
+        Assert(limitedUnicodeText.EndsWith("…", StringComparison.Ordinal), "Expected a shortened tooltip to end with an ellipsis.");
+        Assert(
+            !char.IsHighSurrogate(limitedUnicodeText[limitedUnicodeText.Length - 2]),
+            "Expected the tooltip not to split a surrogate pair before the ellipsis.");
+
+        RunOnStaThread(() =>
+        {
+            Localization.SetLanguage("fr", persist: false);
+            using var context = new TrayApplicationContext();
+        });
     }
     finally
     {
@@ -441,7 +483,18 @@ static void TestSettingsMenuStructure()
 
             Assert(topLevelItems.All(item => item.Text != "Language"), "Expected Language to move out of the top-level menu.");
             Assert(settingsChildren.Any(item => item.Text == "Start with Windows"), "Expected startup in Settings.");
-            Assert(settingsChildren.Any(item => item.Text == "Language"), "Expected Language in Settings.");
+            var languageItem = settingsChildren.Single(item => item.Text == "Language");
+            var expectedLanguageChoices = new[] { "System default" }
+                .Concat(Localization.SupportedLanguages.Select(language => language.NativeName))
+                .ToArray();
+            var actualLanguageChoices = languageItem.DropDownItems
+                .OfType<ToolStripMenuItem>()
+                .Select(item => item.Text)
+                .ToArray();
+            Assert(
+                expectedLanguageChoices.SequenceEqual(actualLanguageChoices, StringComparer.Ordinal),
+                "Expected every language choice in the dedicated Language submenu.");
+
             Assert(settingsChildren.Any(item => item.Text == "Check for updates"), "Expected updater in Settings.");
 
             context.SetAvailableUpdateForTesting(new Version(0, 2, 0));
@@ -461,6 +514,39 @@ static void TestSettingsMenuStructure()
             Localization.SetLanguage(previousCultureName, persist: false);
         }
     });
+}
+
+static void TestLanguageDropDownDirection()
+{
+    var workingArea = new Rectangle(0, 0, 568, 768);
+    var dropDownSize = new Size(170, 220);
+
+    var rightEdgeItem = new Rectangle(371, 245, 168, 25);
+    Assert(
+        TrayApplicationContext.ChooseLanguageDropDownDirection(
+            rightEdgeItem,
+            dropDownSize,
+            workingArea,
+            preferLeft: false) == ToolStripDropDownDirection.Left,
+        "Expected a Language submenu near the right edge to open left.");
+
+    var leftEdgeItem = new Rectangle(8, 245, 168, 25);
+    Assert(
+        TrayApplicationContext.ChooseLanguageDropDownDirection(
+            leftEdgeItem,
+            dropDownSize,
+            workingArea,
+            preferLeft: false) == ToolStripDropDownDirection.Right,
+        "Expected a Language submenu near the left edge to open right.");
+
+    var centeredItem = new Rectangle(200, 245, 168, 25);
+    Assert(
+        TrayApplicationContext.ChooseLanguageDropDownDirection(
+            centeredItem,
+            new Size(100, 220),
+            workingArea,
+            preferLeft: true) == ToolStripDropDownDirection.Left,
+        "Expected right-to-left languages to prefer a left-opening submenu when both sides fit.");
 }
 
 static string BuildReleaseJson(

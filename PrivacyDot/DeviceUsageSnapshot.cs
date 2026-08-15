@@ -1,9 +1,13 @@
+using System.Globalization;
 using System.Text;
 
 namespace PrivacyDot;
 
 internal sealed class DeviceUsageSnapshot : IEquatable<DeviceUsageSnapshot>
 {
+    internal const int MaximumToolTipLength = 63;
+    private const string ToolTipEllipsis = "…";
+
     public static readonly DeviceUsageSnapshot Empty = FromEntries(Array.Empty<DeviceUsageEntry>());
 
     private DeviceUsageSnapshot(
@@ -54,8 +58,41 @@ internal sealed class DeviceUsageSnapshot : IEquatable<DeviceUsageSnapshot>
         get
         {
             var text = Localization.Format(AppText.ToolTipFormat, StatusText);
-            return text.Length <= 127 ? text : text.Substring(0, 124) + "...";
+            return LimitToolTipText(text);
         }
+    }
+
+    internal static string LimitToolTipText(string text)
+    {
+        if (text is null)
+        {
+            throw new ArgumentNullException(nameof(text));
+        }
+
+        if (text.Length <= MaximumToolTipLength)
+        {
+            return text;
+        }
+
+        var contentLimit = MaximumToolTipLength - ToolTipEllipsis.Length;
+        var textElementStarts = StringInfo.ParseCombiningCharacters(text);
+        var contentLength = 0;
+
+        for (var index = 0; index < textElementStarts.Length; index++)
+        {
+            var elementEnd = index + 1 < textElementStarts.Length
+                ? textElementStarts[index + 1]
+                : text.Length;
+
+            if (elementEnd > contentLimit)
+            {
+                break;
+            }
+
+            contentLength = elementEnd;
+        }
+
+        return text.Substring(0, contentLength).TrimEnd() + ToolTipEllipsis;
     }
 
     public static DeviceUsageSnapshot FromEntries(IEnumerable<DeviceUsageEntry> entries)
