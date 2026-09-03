@@ -69,13 +69,17 @@ internal sealed class RegistryUsageReader
                     continue;
                 }
 
+                var lastUsedTimeStart = subKey.GetValue("LastUsedTimeStart");
+                var lastUsedTimeStop = subKey.GetValue("LastUsedTimeStop");
+
                 if (RegistryUsageParser.TryCreateEntry(
                     kind,
                     subKeyName,
-                    subKey.GetValue("LastUsedTimeStart"),
-                    subKey.GetValue("LastUsedTimeStop"),
+                    lastUsedTimeStart,
+                    lastUsedTimeStop,
                     out var entry)
-                    && entry is not null)
+                    && entry is not null
+                    && !SlackStaleUsageGuard.ShouldSuppress(entry, lastUsedTimeStart, lastUsedTimeStop))
                 {
                     entries.Add(entry);
                 }
