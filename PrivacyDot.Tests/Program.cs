@@ -8,12 +8,42 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
 
+Application.SetUnhandledExceptionMode(UnhandledExceptionMode.ThrowException);
+
+if (args.Length == 1 && args[0] == "--inspect-device-usage")
+{
+    RunOnStaThread(DeviceTests.InspectNativeUsage);
+    return;
+}
+
+if (args.Length == 2 && args[0] == "--render-device-screenshots")
+{
+    RunOnStaThread(() => DeviceTests.RenderScreenshots(args[1]));
+    return;
+}
+
+if (args.Length == 1 && args[0] == "--process-action-helper")
+{
+    Console.WriteLine("READY");
+    Thread.Sleep(Timeout.Infinite);
+    return;
+}
+
+if (args.Length == 2 && args[0] == "--render-action-screenshots")
+{
+    RunOnStaThread(() => ActionTests.RenderScreenshots(args[1]));
+    return;
+}
+
 if (args.Length == 2 && string.Equals(args[0], "--render-doc-screenshots", StringComparison.OrdinalIgnoreCase))
 {
-    Localization.SetLanguage("en", persist: false);
-    Application.EnableVisualStyles();
-    Application.SetCompatibleTextRenderingDefault(false);
-    RenderDocumentationScreenshots(args[1]);
+    RunOnStaThread(() =>
+    {
+        Localization.SetLanguage("en", persist: false);
+        Application.EnableVisualStyles();
+        Application.SetCompatibleTextRenderingDefault(false);
+        RenderDocumentationScreenshots(args[1]);
+    });
     return;
 }
 
@@ -95,13 +125,34 @@ var tests = new (string Name, Action Run)[]
     ("Updater caps streamed installer data", TestInstallerStreamSizeLimit),
     ("Updater downloads and verifies the installer", TestVerifiedInstallerDownload),
     ("Settings contains the Language submenu and updater controls", TestSettingsMenuStructure),
-    ("Language submenu opens toward available screen space", TestLanguageDropDownDirection)
+    ("Language submenu opens toward available screen space", TestLanguageDropDownDirection),
+    ("Force quit matches exact identities", ActionTests.TestIdentityMatching),
+    ("Force quit requires a deliberate second action and expires", ActionTests.TestConfirmation),
+    ("Force quit handles cancellation and failures", ActionTests.TestFailures),
+    ("Native force quit targets only captured helper processes", ActionTests.TestNativeQuit),
+    ("Popup actions render and confirm without touching live apps", () => RunOnStaThread(ActionTests.TestPopup)),
+    ("Popup shutdown never rebuilds disposed controls", () => RunOnStaThread(ActionTests.TestPopupShutdown)),
+    ("Apps stay separate across multiple devices", DeviceTests.TestMultipleDevices),
+    ("Unidentified devices and duplicate device names remain clear", DeviceTests.TestFallbackAndNames),
+    ("Device switches and renames refresh the snapshot", DeviceTests.TestDeviceChanges),
+    ("Camera activity handles concurrent devices and stop reports", DeviceTests.TestCameraActivityUpdates),
+    ("Quit confirmation belongs to a specific device row", DeviceTests.TestRowConfirmation),
+    ("Popup groups apps under named devices in each reading direction", () => RunOnStaThread(DeviceTests.TestGroupedPopup))
 };
 
 foreach (var test in tests)
 {
-    test.Run();
-    Console.WriteLine($"PASS {test.Name}");
+    try
+    {
+        test.Run();
+        Console.WriteLine($"PASS {test.Name}");
+    }
+    catch (Exception ex)
+    {
+        Console.Error.WriteLine($"FAIL {test.Name}: {ex}");
+        Environment.ExitCode = 1;
+        return;
+    }
 }
 
 Console.WriteLine("All PrivacyDot tests passed.");
@@ -698,12 +749,7 @@ static string BuildReleaseJson(
 static void RenderDocumentationScreenshots(string outputDirectory)
 {
     Directory.CreateDirectory(outputDirectory);
-    var snapshot = DeviceUsageSnapshot.FromEntries(new[]
-    {
-        new DeviceUsageEntry(DeviceKind.Microphone, "Browser Tab", "Sample.BrowserTab", UsageSource.CoreAudio),
-        new DeviceUsageEntry(DeviceKind.Microphone, "Video Call", "Sample.VideoCall", UsageSource.PrivacyRegistry),
-        new DeviceUsageEntry(DeviceKind.Camera, "Camera App", "Sample.CameraApp", UsageSource.PrivacyRegistry)
-    });
+    var snapshot = DeviceTests.Sample;
 
     RenderPopupScreenshot(snapshot, ThemePalette.Dark, Path.Combine(outputDirectory, "popup-dark.png"));
     RenderPopupScreenshot(snapshot, ThemePalette.Light, Path.Combine(outputDirectory, "popup-light.png"));
@@ -747,6 +793,7 @@ static void RunOnStaThread(Action action)
     Exception? failure = null;
     var thread = new Thread(() =>
     {
+        Application.SetUnhandledExceptionMode(UnhandledExceptionMode.ThrowException);
         try
         {
             action();

@@ -34,7 +34,19 @@ internal enum AppText
     UpdateFailedFormat,
     Exit,
     StartupSettingFailed,
-    PrivacySettingsOpenFailed
+    PrivacySettingsOpenFailed,
+    ForceQuitFormat,
+    ConfirmForceQuit,
+    ForceQuitWarningFormat,
+    ForceQuitUnavailable,
+    ForceQuitFailed,
+    ForceQuitCompleted,
+    MicrophoneControlUnavailable,
+    CameraControlUnavailable,
+    DeviceControlExplanation,
+    CameraActivity,
+    DeviceNotIdentified,
+    DeviceNotIdentifiedExplanation
 }
 
 internal sealed class LanguageOption
@@ -104,7 +116,19 @@ internal static class Localization
                 [AppText.UpdateFailedFormat] = "PrivacyDot couldn’t complete the update.\n\n{0}",
                 [AppText.Exit] = "Exit",
                 [AppText.StartupSettingFailed] = "PrivacyDot startup setting failed",
-                [AppText.PrivacySettingsOpenFailed] = "Privacy settings failed to open"
+                [AppText.PrivacySettingsOpenFailed] = "Privacy settings failed to open",
+                [AppText.ForceQuitFormat] = "Force quit {0}",
+                [AppText.ConfirmForceQuit] = "Confirm force quit",
+                [AppText.ForceQuitWarningFormat] = "Quit {0}? Matching processes: {1}. Unsaved work may be lost. Click the warning again to quit; Esc cancels.",
+                [AppText.ForceQuitUnavailable] = "No matching process can be closed. It may have exited or require higher permissions.",
+                [AppText.ForceQuitFailed] = "Some processes could not be closed. Refresh the list and try again.",
+                [AppText.ForceQuitCompleted] = "Quit requested. Waiting for Windows to update device usage.",
+                [AppText.MicrophoneControlUnavailable] = "Microphone access control unavailable",
+                [AppText.CameraControlUnavailable] = "Camera access control unavailable",
+                [AppText.DeviceControlExplanation] = "PrivacyDot cannot temporarily revoke this app’s device access. Use the app’s own controls or Windows privacy settings.",
+                [AppText.CameraActivity] = "Windows camera activity",
+                [AppText.DeviceNotIdentified] = "Device not identified",
+                [AppText.DeviceNotIdentifiedExplanation] = "Windows reports app usage without identifying the device."
             },
             ["fr"] = new Dictionary<AppText, string>
             {
@@ -136,7 +160,19 @@ internal static class Localization
                 [AppText.UpdateFailedFormat] = "PrivacyDot n’a pas pu terminer la mise à jour.\n\n{0}",
                 [AppText.Exit] = "Quitter",
                 [AppText.StartupSettingFailed] = "Échec du réglage du démarrage de PrivacyDot",
-                [AppText.PrivacySettingsOpenFailed] = "Impossible d’ouvrir les paramètres de confidentialité"
+                [AppText.PrivacySettingsOpenFailed] = "Impossible d’ouvrir les paramètres de confidentialité",
+                [AppText.ForceQuitFormat] = "Forcer l’arrêt de {0}",
+                [AppText.ConfirmForceQuit] = "Confirmer l’arrêt forcé",
+                [AppText.ForceQuitWarningFormat] = "Quitter {0} ? Processus concernés : {1}. Le travail non enregistré peut être perdu. Recliquez sur l’avertissement pour quitter ; Échap annule.",
+                [AppText.ForceQuitUnavailable] = "Aucun processus correspondant ne peut être fermé. Il a peut-être quitté ou nécessite des droits supplémentaires.",
+                [AppText.ForceQuitFailed] = "Certains processus n’ont pas pu être fermés. Actualisez la liste et réessayez.",
+                [AppText.ForceQuitCompleted] = "Arrêt demandé. En attente de la mise à jour de l’utilisation par Windows.",
+                [AppText.MicrophoneControlUnavailable] = "Contrôle de l’accès au microphone indisponible",
+                [AppText.CameraControlUnavailable] = "Contrôle de l’accès à la caméra indisponible",
+                [AppText.DeviceControlExplanation] = "PrivacyDot ne peut pas révoquer temporairement l’accès de cette application. Utilisez ses commandes ou les paramètres de confidentialité Windows.",
+                [AppText.CameraActivity] = "Activité caméra Windows",
+                [AppText.DeviceNotIdentified] = "Appareil non identifié",
+                [AppText.DeviceNotIdentifiedExplanation] = "Windows signale l’utilisation par l’application sans identifier l’appareil."
             },
             ["es"] = new Dictionary<AppText, string>
             {
@@ -168,7 +204,19 @@ internal static class Localization
                 [AppText.UpdateFailedFormat] = "PrivacyDot no pudo completar la actualización.\n\n{0}",
                 [AppText.Exit] = "Salir",
                 [AppText.StartupSettingFailed] = "No se pudo configurar el inicio de PrivacyDot",
-                [AppText.PrivacySettingsOpenFailed] = "No se pudo abrir la configuración de privacidad"
+                [AppText.PrivacySettingsOpenFailed] = "No se pudo abrir la configuración de privacidad",
+                [AppText.ForceQuitFormat] = "Forzar el cierre de {0}",
+                [AppText.ConfirmForceQuit] = "Confirmar cierre forzado",
+                [AppText.ForceQuitWarningFormat] = "¿Cerrar {0}? Procesos afectados: {1}. Se puede perder el trabajo sin guardar. Pulsa de nuevo la advertencia para cerrar; Esc cancela.",
+                [AppText.ForceQuitUnavailable] = "No se puede cerrar ningún proceso coincidente. Puede haber finalizado o requerir más permisos.",
+                [AppText.ForceQuitFailed] = "No se pudieron cerrar algunos procesos. Actualiza la lista e inténtalo de nuevo.",
+                [AppText.ForceQuitCompleted] = "Cierre solicitado. Esperando a que Windows actualice el uso del dispositivo.",
+                [AppText.MicrophoneControlUnavailable] = "Control de acceso al micrófono no disponible",
+                [AppText.CameraControlUnavailable] = "Control de acceso a la cámara no disponible",
+                [AppText.DeviceControlExplanation] = "PrivacyDot no puede revocar temporalmente el acceso de esta aplicación. Usa sus propios controles o la configuración de privacidad de Windows.",
+                [AppText.CameraActivity] = "Actividad de cámara de Windows",
+                [AppText.DeviceNotIdentified] = "Dispositivo no identificado",
+                [AppText.DeviceNotIdentifiedExplanation] = "Windows informa del uso de la aplicación sin identificar el dispositivo."
             },
             ["ja"] = new Dictionary<AppText, string>
             {
@@ -200,7 +248,19 @@ internal static class Localization
                 [AppText.UpdateFailedFormat] = "PrivacyDot の更新を完了できませんでした。\n\n{0}",
                 [AppText.Exit] = "終了",
                 [AppText.StartupSettingFailed] = "PrivacyDot の起動設定に失敗しました",
-                [AppText.PrivacySettingsOpenFailed] = "プライバシー設定を開けませんでした"
+                [AppText.PrivacySettingsOpenFailed] = "プライバシー設定を開けませんでした",
+                [AppText.ForceQuitFormat] = "{0} を強制終了",
+                [AppText.ConfirmForceQuit] = "強制終了を確認",
+                [AppText.ForceQuitWarningFormat] = "{0} を終了しますか？ 対象プロセス数：{1}。未保存の作業が失われる可能性があります。警告をもう一度クリックすると終了します。Esc でキャンセル。",
+                [AppText.ForceQuitUnavailable] = "終了できる対象プロセスがありません。すでに終了しているか、追加の権限が必要な可能性があります。",
+                [AppText.ForceQuitFailed] = "一部のプロセスを終了できませんでした。一覧を更新して再試行してください。",
+                [AppText.ForceQuitCompleted] = "終了を要求しました。Windows がデバイスの使用状況を更新するまでお待ちください。",
+                [AppText.MicrophoneControlUnavailable] = "マイクへのアクセス制御は利用できません",
+                [AppText.CameraControlUnavailable] = "カメラへのアクセス制御は利用できません",
+                [AppText.DeviceControlExplanation] = "PrivacyDot では、このアプリのデバイスへのアクセスを一時的に取り消せません。アプリ内の操作か Windows のプライバシー設定を使用してください。",
+                [AppText.CameraActivity] = "Windows カメラの使用状況",
+                [AppText.DeviceNotIdentified] = "デバイスを特定できません",
+                [AppText.DeviceNotIdentifiedExplanation] = "Windows はアプリの使用を報告していますが、デバイスを特定していません。"
             },
             [MandarinCultureName] = new Dictionary<AppText, string>
             {
@@ -232,7 +292,19 @@ internal static class Localization
                 [AppText.UpdateFailedFormat] = "PrivacyDot 无法完成更新。\n\n{0}",
                 [AppText.Exit] = "退出",
                 [AppText.StartupSettingFailed] = "无法更改 PrivacyDot 启动设置",
-                [AppText.PrivacySettingsOpenFailed] = "无法打开隐私设置"
+                [AppText.PrivacySettingsOpenFailed] = "无法打开隐私设置",
+                [AppText.ForceQuitFormat] = "强制退出 {0}",
+                [AppText.ConfirmForceQuit] = "确认强制退出",
+                [AppText.ForceQuitWarningFormat] = "退出 {0}？匹配的进程数：{1}。未保存的工作可能丢失。再次点击警告以退出；按 Esc 取消。",
+                [AppText.ForceQuitUnavailable] = "没有可关闭的匹配进程。它可能已退出，或需要更高权限。",
+                [AppText.ForceQuitFailed] = "部分进程无法关闭。请刷新列表后重试。",
+                [AppText.ForceQuitCompleted] = "已请求退出。正在等待 Windows 更新设备使用情况。",
+                [AppText.MicrophoneControlUnavailable] = "麦克风访问控制不可用",
+                [AppText.CameraControlUnavailable] = "摄像头访问控制不可用",
+                [AppText.DeviceControlExplanation] = "PrivacyDot 无法暂时撤销此应用的设备访问权限。请使用应用自身的控制选项或 Windows 隐私设置。",
+                [AppText.CameraActivity] = "Windows 摄像头活动",
+                [AppText.DeviceNotIdentified] = "设备未识别",
+                [AppText.DeviceNotIdentifiedExplanation] = "Windows 报告了应用使用情况，但未标明具体设备。"
             },
             ["hi"] = new Dictionary<AppText, string>
             {
@@ -264,7 +336,19 @@ internal static class Localization
                 [AppText.UpdateFailedFormat] = "PrivacyDot अपडेट पूरा नहीं कर सका।\n\n{0}",
                 [AppText.Exit] = "बाहर निकलें",
                 [AppText.StartupSettingFailed] = "PrivacyDot की स्टार्टअप सेटिंग बदल नहीं सकी",
-                [AppText.PrivacySettingsOpenFailed] = "गोपनीयता सेटिंग नहीं खुल सकीं"
+                [AppText.PrivacySettingsOpenFailed] = "गोपनीयता सेटिंग नहीं खुल सकीं",
+                [AppText.ForceQuitFormat] = "{0} को बलपूर्वक बंद करें",
+                [AppText.ConfirmForceQuit] = "बलपूर्वक बंद करने की पुष्टि करें",
+                [AppText.ForceQuitWarningFormat] = "{0} बंद करें? संबंधित प्रक्रियाएँ: {1}। सहेजा नहीं गया काम खो सकता है। बंद करने के लिए चेतावनी पर फिर क्लिक करें; Esc से रद्द करें।",
+                [AppText.ForceQuitUnavailable] = "कोई संबंधित प्रक्रिया बंद नहीं की जा सकती। वह पहले ही बंद हो गई हो सकती है या अधिक अनुमतियाँ चाहिए।",
+                [AppText.ForceQuitFailed] = "कुछ प्रक्रियाएँ बंद नहीं की जा सकीं। सूची रीफ़्रेश करके फिर प्रयास करें।",
+                [AppText.ForceQuitCompleted] = "बंद करने का अनुरोध भेजा गया। Windows द्वारा डिवाइस उपयोग अपडेट होने की प्रतीक्षा है।",
+                [AppText.MicrophoneControlUnavailable] = "माइक्रोफ़ोन एक्सेस नियंत्रण उपलब्ध नहीं है",
+                [AppText.CameraControlUnavailable] = "कैमरा एक्सेस नियंत्रण उपलब्ध नहीं है",
+                [AppText.DeviceControlExplanation] = "PrivacyDot इस ऐप का डिवाइस एक्सेस अस्थायी रूप से नहीं हटा सकता। ऐप के अपने नियंत्रण या Windows गोपनीयता सेटिंग इस्तेमाल करें।",
+                [AppText.CameraActivity] = "Windows कैमरा गतिविधि",
+                [AppText.DeviceNotIdentified] = "डिवाइस की पहचान नहीं हुई",
+                [AppText.DeviceNotIdentifiedExplanation] = "Windows ऐप के उपयोग की जानकारी देता है, लेकिन डिवाइस की पहचान नहीं करता।"
             },
             ["ar"] = new Dictionary<AppText, string>
             {
@@ -296,7 +380,19 @@ internal static class Localization
                 [AppText.UpdateFailedFormat] = "تعذر على PrivacyDot إكمال التحديث.\n\n{0}",
                 [AppText.Exit] = "خروج",
                 [AppText.StartupSettingFailed] = "تعذر تغيير إعداد بدء تشغيل PrivacyDot",
-                [AppText.PrivacySettingsOpenFailed] = "تعذر فتح إعدادات الخصوصية"
+                [AppText.PrivacySettingsOpenFailed] = "تعذر فتح إعدادات الخصوصية",
+                [AppText.ForceQuitFormat] = "إنهاء {0} بالقوة",
+                [AppText.ConfirmForceQuit] = "تأكيد الإنهاء بالقوة",
+                [AppText.ForceQuitWarningFormat] = "إنهاء {0}؟ عدد العمليات المطابقة: {1}. قد تفقد العمل غير المحفوظ. انقر التحذير مرة أخرى للإنهاء؛ Esc للإلغاء.",
+                [AppText.ForceQuitUnavailable] = "لا توجد عملية مطابقة يمكن إغلاقها. ربما انتهت أو تتطلب صلاحيات إضافية.",
+                [AppText.ForceQuitFailed] = "تعذر إغلاق بعض العمليات. حدّث القائمة وحاول مرة أخرى.",
+                [AppText.ForceQuitCompleted] = "تم طلب الإنهاء. بانتظار تحديث Windows لاستخدام الجهاز.",
+                [AppText.MicrophoneControlUnavailable] = "التحكم في الوصول إلى الميكروفون غير متاح",
+                [AppText.CameraControlUnavailable] = "التحكم في الوصول إلى الكاميرا غير متاح",
+                [AppText.DeviceControlExplanation] = "لا يستطيع PrivacyDot إلغاء وصول هذا التطبيق إلى الجهاز مؤقتاً. استخدم عناصر التحكم داخل التطبيق أو إعدادات خصوصية Windows.",
+                [AppText.CameraActivity] = "نشاط كاميرا Windows",
+                [AppText.DeviceNotIdentified] = "الجهاز غير محدد",
+                [AppText.DeviceNotIdentifiedExplanation] = "يبلغ Windows عن استخدام التطبيق دون تحديد الجهاز."
             },
             ["ru"] = new Dictionary<AppText, string>
             {
@@ -328,7 +424,19 @@ internal static class Localization
                 [AppText.UpdateFailedFormat] = "PrivacyDot не удалось завершить обновление.\n\n{0}",
                 [AppText.Exit] = "Выход",
                 [AppText.StartupSettingFailed] = "Не удалось изменить настройку запуска PrivacyDot",
-                [AppText.PrivacySettingsOpenFailed] = "Не удалось открыть параметры конфиденциальности"
+                [AppText.PrivacySettingsOpenFailed] = "Не удалось открыть параметры конфиденциальности",
+                [AppText.ForceQuitFormat] = "Принудительно закрыть {0}",
+                [AppText.ConfirmForceQuit] = "Подтвердить принудительное закрытие",
+                [AppText.ForceQuitWarningFormat] = "Закрыть {0}? Найдено процессов: {1}. Несохранённая работа может быть потеряна. Нажмите предупреждение ещё раз для закрытия; Esc — отмена.",
+                [AppText.ForceQuitUnavailable] = "Нет подходящих процессов для закрытия. Возможно, они уже завершены или требуются дополнительные права.",
+                [AppText.ForceQuitFailed] = "Некоторые процессы не удалось закрыть. Обновите список и повторите попытку.",
+                [AppText.ForceQuitCompleted] = "Запрошено закрытие. Ожидание обновления данных об использовании устройства в Windows.",
+                [AppText.MicrophoneControlUnavailable] = "Управление доступом к микрофону недоступно",
+                [AppText.CameraControlUnavailable] = "Управление доступом к камере недоступно",
+                [AppText.DeviceControlExplanation] = "PrivacyDot не может временно отозвать доступ этого приложения к устройству. Используйте настройки приложения или параметры конфиденциальности Windows.",
+                [AppText.CameraActivity] = "Активность камеры Windows",
+                [AppText.DeviceNotIdentified] = "Устройство не определено",
+                [AppText.DeviceNotIdentifiedExplanation] = "Windows сообщает об использовании приложением, но не указывает устройство."
             }
         };
 

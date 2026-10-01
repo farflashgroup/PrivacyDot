@@ -99,12 +99,19 @@ internal sealed class DeviceUsageSnapshot : IEquatable<DeviceUsageSnapshot>
     {
         var uniqueEntries = entries
             .Where(entry => !string.IsNullOrWhiteSpace(entry.DisplayName) && !string.IsNullOrWhiteSpace(entry.Identity))
-            .GroupBy(entry => $"{entry.Kind}|{entry.Identity}", StringComparer.OrdinalIgnoreCase)
+            .GroupBy(entry => entry.AppKey, StringComparer.Ordinal)
+            // Registry usage has no endpoint. Once this app has a confirmed device,
+            // do not add a duplicate row under "Device not identified".
+            .SelectMany(group => group.Any(entry => entry.DeviceId is not null)
+                ? group.Where(entry => entry.DeviceId is not null) : group)
+            .GroupBy(entry => entry.RowKey, StringComparer.Ordinal)
             .Select(group => group
-                .OrderBy(entry => entry.Source == UsageSource.CoreAudio ? 0 : 1)
-                .ThenBy(entry => entry.DisplayName, StringComparer.CurrentCultureIgnoreCase)
+                .OrderBy(entry => entry.Source == UsageSource.PrivacyRegistry ? 1 : 0)
+                .ThenBy(entry => entry.DeviceName is null ? 1 : 0)
+                .ThenBy(entry => entry.DisplayName, StringComparer.Ordinal)
                 .First())
             .OrderBy(entry => entry.Kind)
+            .ThenBy(entry => entry.DeviceId, StringComparer.OrdinalIgnoreCase)
             .ThenBy(entry => entry.DisplayName, StringComparer.CurrentCultureIgnoreCase)
             .ThenBy(entry => entry.Identity, StringComparer.OrdinalIgnoreCase)
             .ToArray();
@@ -147,6 +154,12 @@ internal sealed class DeviceUsageSnapshot : IEquatable<DeviceUsageSnapshot>
                 .Append(entry.Identity)
                 .Append('|')
                 .Append(entry.DisplayName)
+                .Append('|')
+                .Append(entry.DeviceId)
+                .Append('|')
+                .Append(entry.DeviceName)
+                .Append('|')
+                .Append(entry.Source)
                 .Append(';');
         }
 

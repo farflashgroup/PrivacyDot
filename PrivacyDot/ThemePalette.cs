@@ -55,6 +55,8 @@ internal sealed class ThemePalette
 
     public Color CheckMark { get; }
 
+    public Color WarningText => IsDark ? Color.FromArgb(255, 180, 72) : Color.FromArgb(150, 78, 0);
+
     public static ThemePalette Current
     {
         get

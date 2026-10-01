@@ -10,7 +10,7 @@
     <AssemblyName>PrivacyDot</AssemblyName>
     <RootNamespace>PrivacyDot</RootNamespace>
     <ApplicationIcon>Assets\PrivacyDot.ico</ApplicationIcon>
-    <Version>0.2.2</Version>
+    <Version>0.3.0</Version>
     <Authors>PrivacyDot contributors</Authors>
     <Description>A tiny Windows tray privacy indicator for microphone and camera activity.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

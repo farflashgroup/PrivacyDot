@@ -25,6 +25,14 @@ PrivacyDot sits in the Windows notification area and gives you a quick visual re
 
 Left-click the dot to see the apps currently detected under **Microphone** and **Camera**. Right-click for refresh, Windows privacy settings, Settings, and Exit. Settings contains Start with Windows, Language, and update controls.
 
+Apps are grouped under the device they use, such as **Headset Microphone**, **USB Microphone**, **Integrated Camera**, or **Logitech Brio**. Multiple apps can appear under one device, and an app using several devices appears under each one. Devices with identical names have separate numbered headings; hover over a heading to see its device ID. Activity that Windows cannot associate with a device appears under **Device not identified**, rather than being assigned to the default device.
+
+Each app row has monochrome device and force-quit controls on the right. The crossed-out microphone or camera is unavailable: hover, focus, or click it for an explanation. PrivacyDot does not currently offer temporary per-app permission revocation; use the app's own controls or Windows privacy settings.
+
+Click **×** to replace the controls with a warning, then click the warning again to force quit. The warning shows the number of matching processes and cautions about unsaved work. It expires after ten seconds; Esc, closing the popup, or refreshing the list cancels it. Only processes with the exact executable path or package identity, owned by you in your current Windows session, can be targeted. All matching processes captured at confirmation time may close, including multiple windows of the same app; newly started processes are not included. Protected or unidentifiable processes cannot be closed.
+
+Force quitting closes the app's matching processes across all devices; it does not disconnect only the device whose row you clicked.
+
 PrivacyDot follows your Windows app theme when showing its popup and tray menu, with dark mode support on Windows versions that expose the app-theme setting.
 
 ## Languages
@@ -40,6 +48,8 @@ PrivacyDot quietly checks the latest stable GitHub release after startup. When a
 Update downloads require TLS 1.2 with certificate-revocation checking, are restricted to the exact release tag and installer path in this repository, and have strict metadata, download-size, and timeout limits. The installer’s size and SHA-256 digest must match GitHub’s release metadata, and Windows Internet-zone provenance is preserved for SmartScreen. PrivacyDot never downloads an update in the background.
 
 ## Screenshots
+
+Illustrative app and device data.
 
 | Dark mode | Light mode |
 | --- | --- |
@@ -62,7 +72,9 @@ No administrator privileges are required.
 
 PrivacyDot targets .NET Framework 4.8 so it can run on Windows 7 SP1 and newer. Modern .NET no longer supports Windows 7, but .NET Framework 4.8 and the Core Audio APIs used for microphone session detection are compatible with Windows 7 SP1.
 
-Camera app detection uses the Windows privacy usage registry when it exists, which is available on newer Windows versions. On Windows 7, the app still runs and microphone detection uses Core Audio, but camera app attribution is best-effort because Windows 7 does not expose the Windows 10+ privacy usage records.
+Microphone attribution reads each active Core Audio capture endpoint's ID, friendly name, and active sessions. Camera attribution uses Windows' [sensor activity monitor](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nn-mfidl-imfsensoractivitymonitor), available from Windows 10 version 1703, to obtain camera names, device IDs, and streaming processes. This observes usage metadata without opening a camera or recording audio/video.
+
+Windows privacy usage records remain a fallback for apps whose devices cannot be identified, including capture paths not reported by the camera activity monitor. Detection is best-effort and depends on Windows and the driver exposing activity. On older Windows releases or systems without Media Foundation, the app keeps working with the available sources; per-camera attribution is unavailable. Windows 7 also lacks the newer privacy usage records, so camera app detection there is limited.
 
 ## Build
 

@@ -6,6 +6,7 @@ namespace PrivacyDot;
 internal sealed class TrayApplicationContext : ApplicationContext
 {
     private readonly UsageMonitor _monitor;
+    private readonly DeviceNameRegistry _deviceNames = new();
     private readonly NotifyIcon _notifyIcon;
     private readonly ContextMenuStrip _menu;
     private readonly ToolStripMenuItem _statusItem;
@@ -456,7 +457,8 @@ internal sealed class TrayApplicationContext : ApplicationContext
         RefreshAndUpdatePopup();
         _popup?.Close();
 
-        _popup = new UsagePopupForm(_monitor.Current);
+        _popup = new UsagePopupForm(_monitor.Current, deviceNames: _deviceNames);
+        _popup.ProcessQuit += (_, _) => _monitor.RefreshNow();
         _popup.FormClosed += (_, _) => _popup = null;
         _popup.ShowNearCursor();
     }

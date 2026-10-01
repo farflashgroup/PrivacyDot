@@ -4,6 +4,7 @@ internal sealed class UsageMonitor : IDisposable
 {
     private readonly RegistryUsageReader _registryUsageReader = new();
     private readonly CoreAudioUsageReader _coreAudioUsageReader = new();
+    private readonly CameraActivityReader _cameraActivityReader = new();
     private readonly System.Windows.Forms.Timer _timer;
     private bool _disposed;
 
@@ -19,6 +20,7 @@ internal sealed class UsageMonitor : IDisposable
 
     public void Start()
     {
+        _cameraActivityReader.Start();
         RefreshNow();
         _timer.Start();
     }
@@ -49,6 +51,7 @@ internal sealed class UsageMonitor : IDisposable
         _disposed = true;
         _timer.Stop();
         _timer.Dispose();
+        _cameraActivityReader.Dispose();
     }
 
     private DeviceUsageSnapshot CaptureSnapshot()
@@ -57,6 +60,7 @@ internal sealed class UsageMonitor : IDisposable
 
         entries.AddRange(_registryUsageReader.GetActiveUsage());
         entries.AddRange(_coreAudioUsageReader.GetActiveMicrophoneApps());
+        entries.AddRange(_cameraActivityReader.GetActiveCameraApps());
 
         return DeviceUsageSnapshot.FromEntries(entries);
     }

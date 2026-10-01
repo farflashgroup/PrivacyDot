@@ -57,6 +57,8 @@ internal sealed class CoreAudioUsageReader
                 return;
             }
 
+            var deviceId = device.GetId(out var id) >= 0 ? id : null;
+            var deviceName = ReadFriendlyName(device);
             var sessionManagerId = typeof(IAudioSessionManager2).GUID;
 
             if (device.Activate(ref sessionManagerId, ClsctxAll, IntPtr.Zero, out managerObject) < 0
@@ -77,8 +79,12 @@ internal sealed class CoreAudioUsageReader
 
             for (var i = 0; i < sessionCount; i++)
             {
-                ReadSession(sessions, i, entries);
+                ReadSession(sessions, i, entries, deviceId, deviceName);
             }
+        }
+        catch
+        {
+            // A device can disappear during enumeration; keep other endpoints.
         }
         finally
         {
@@ -88,7 +94,8 @@ internal sealed class CoreAudioUsageReader
         }
     }
 
-    private static void ReadSession(IAudioSessionEnumerator sessions, int sessionIndex, List<DeviceUsageEntry> entries)
+    private static void ReadSession(IAudioSessionEnumerator sessions, int sessionIndex, List<DeviceUsageEntry> entries,
+        string? deviceId, string? deviceName)
     {
         IAudioSessionControl? control = null;
 
@@ -121,8 +128,12 @@ internal sealed class CoreAudioUsageReader
 
             if (entry is not null)
             {
-                entries.Add(entry);
+                entries.Add(entry.WithDevice(deviceId, deviceName));
             }
+        }
+        catch
+        {
+            // A session can disappear while another app is still capturing.
         }
         finally
         {
@@ -137,6 +148,49 @@ internal sealed class CoreAudioUsageReader
             Marshal.FinalReleaseComObject(value);
         }
     }
+
+    private static string? ReadFriendlyName(IMMDevice device)
+    {
+        IPropertyStore? store = null;
+        // PROPVARIANT is 16 bytes on x86 and 24 on x64. A 24-byte buffer
+        // accommodates both; its value union starts at offset 8 on both ABIs.
+        var value = Marshal.AllocCoTaskMem(24);
+        for (var offset = 0; offset < 24; offset++) Marshal.WriteByte(value, offset, 0);
+        try
+        {
+            if (device.OpenPropertyStore(0 /* STGM_READ */, out store) < 0 || store is null) return null;
+            var key = new PropertyKey { FormatId = new Guid("a45c254e-df1c-4efd-8020-67d146a850e0"), PropertyId = 14 };
+            if (store.GetValue(ref key, value) < 0 || Marshal.ReadInt16(value) != 31 /* VT_LPWSTR */) return null;
+            return Marshal.PtrToStringUni(Marshal.ReadIntPtr(value, 8));
+        }
+        catch { return null; }
+        finally
+        {
+            PropVariantClear(value);
+            Marshal.FreeCoTaskMem(value);
+            ReleaseComObject(store);
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct PropertyKey
+    {
+        public Guid FormatId;
+        public uint PropertyId;
+    }
+
+    [ComImport, Guid("886d8eeb-8cf2-4446-8d02-cdba1dbdcf99"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    private interface IPropertyStore
+    {
+        [PreserveSig] int GetCount(out uint count);
+        [PreserveSig] int GetAt(uint index, out PropertyKey key);
+        [PreserveSig] int GetValue(ref PropertyKey key, IntPtr value);
+        [PreserveSig] int SetValue(ref PropertyKey key, IntPtr value);
+        [PreserveSig] int Commit();
+    }
+
+    [DllImport("ole32.dll")]
+    private static extern int PropVariantClear(IntPtr value);
 
     private enum EDataFlow
     {
@@ -210,7 +264,7 @@ internal sealed class CoreAudioUsageReader
             [MarshalAs(UnmanagedType.IUnknown)] out object ppInterface);
 
         [PreserveSig]
-        int OpenPropertyStore(int stgmAccess, IntPtr ppProperties);
+        int OpenPropertyStore(int stgmAccess, out IPropertyStore ppProperties);
 
         [PreserveSig]
         int GetId([MarshalAs(UnmanagedType.LPWStr)] out string ppstrId);
