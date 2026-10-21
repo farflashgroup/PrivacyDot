@@ -116,3 +116,5 @@ PrivacyDot is open source under the [MIT License](LICENSE).
 Use the [app listing kit](https://privacydot.farflash.com/press.html) for official descriptions, the logo, screenshots, and launch graphics. Screenshots contain illustrative app and device data. For product and directory questions: [privacydot@farflash.com](mailto:privacydot@farflash.com).
 
 The repository's [marketing kit](marketing/README.md) includes directory copy, community launch posts, a submission tracker, and a launch plan. Detection is best-effort; avoid describing PrivacyDot as a permission blocker or guaranteed surveillance detector.
+
+Read the [Windows microphone and camera activity guide](https://privacydot.farflash.com/windows-microphone-camera-indicator.html) for a walkthrough of installation, tray colors, device grouping, and detection limits.

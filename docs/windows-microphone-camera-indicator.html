@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>See which apps use your microphone and camera on Windows — PrivacyDot</title>
+  <meta name="description" content="A practical guide to PrivacyDot's Windows tray indicator: microphone and camera colors, apps grouped by device, local detection, and compatibility.">
+  <link rel="canonical" href="https://privacydot.farflash.com/windows-microphone-camera-indicator.html">
+  <link rel="icon" href="assets/privacydot-logo.png">
+  <link rel="stylesheet" href="styles.css">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="See which apps use your microphone and camera on Windows">
+  <meta property="og:description" content="Read the dot, find the device, understand the limits. A practical PrivacyDot guide.">
+  <meta property="og:url" content="https://privacydot.farflash.com/windows-microphone-camera-indicator.html">
+  <meta property="og:image" content="https://privacydot.farflash.com/assets/privacydot-social.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"See which apps use your microphone and camera on Windows","description":"A practical guide to PrivacyDot's tray indicator, device grouping, and detection limits.","datePublished":"2026-10-21","dateModified":"2026-10-21","author":{"@type":"Organization","name":"FarFlash Group Ltd.","url":"https://farflash.com/"},"mainEntityOfPage":"https://privacydot.farflash.com/windows-microphone-camera-indicator.html","image":"https://privacydot.farflash.com/assets/privacydot-social.png","inLanguage":"en"}</script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header wrap"><a class="brand" href="./"><img src="assets/privacydot-logo.png" alt="" width="36" height="36">PrivacyDot</a><nav aria-label="Main navigation"><a href="./">Home</a><a href="privacy.html">Privacy</a><a href="press.html">Resources</a></nav></header>
+  <main class="wrap reading" id="main">
+    <article>
+      <p class="kicker">A practical guide · October 21, 2026</p>
+      <h1>Which apps are using your mic and camera?</h1>
+      <p class="lead">PrivacyDot puts detected Windows microphone and camera activity beside the clock. Click the dot to see the apps and devices behind it.</p>
+      <p>A call ends, a browser tab stays open, and you want a quick look at the activity Windows is reporting. PrivacyDot is a free, MIT-licensed tray utility built for that glance. It is especially useful when a headset, USB microphone, and webcam are connected at the same time.</p>
+
+      <h2>Get the indicator into your tray</h2>
+      <ol>
+        <li>Open the <a href="https://github.com/farflashgroup/PrivacyDot/releases/latest">official GitHub release</a> and download <strong>PrivacyDotSetup.exe</strong>. The current v0.3.1 installer is unsigned.</li>
+        <li>Run the installer. It checks for .NET Framework 4.8, installs for your Windows user without administrator privileges, and launches PrivacyDot.</li>
+        <li>Look in the Windows notification area, including its overflow area. Left-click the dot for detected activity. Right-click it for refresh, Windows privacy settings, Settings, and Exit.</li>
+      </ol>
+      <p>The installer creates a Startup shortcut. You can manage Start with Windows, language, and update checks in Settings. The interface includes eight languages and follows the Windows app theme where supported.</p>
+
+      <h2>Read the four colors</h2>
+      <table class="facts"><caption>PrivacyDot tray states</caption><thead><tr><th scope="col">Dot</th><th scope="col">Meaning</th></tr></thead><tbody><tr><th scope="row">Gray</th><td>No microphone or camera use detected.</td></tr><tr><th scope="row">Green</th><td>Microphone activity detected.</td></tr><tr><th scope="row">Orange</th><td>Camera activity detected.</td></tr><tr><th scope="row">Split</th><td>Both microphone and camera activity detected.</td></tr></tbody></table>
+      <p>Gray describes what PrivacyDot can detect through the available Windows sources. It does not prove that every possible capture path is inactive.</p>
+
+      <h2>Click through to the device</h2>
+      <p>The popup groups detected apps under the microphone or camera they use. For example, activity on a USB microphone and a headset microphone appears under separate headings. Several apps can appear under one device; an app using several devices can appear under each one.</p>
+      <figure class="screenshot-figure"><img src="screenshots/popup-dark.png" alt="PrivacyDot popup grouping detected apps under microphone and camera device headings" width="390" height="405" loading="lazy"><figcaption>Actual application interface with illustrative app and device data.</figcaption></figure>
+      <p>If Windows cannot associate activity with a device, the popup uses <strong>Device not identified</strong>. It does not guess that the default microphone or camera was used. Devices with identical names receive separate numbered headings; hovering over a heading reveals its device ID.</p>
+
+      <h2>What to do with unexpected activity</h2>
+      <p>Check the named app's own call or recording controls, then close the relevant session or app if appropriate. PrivacyDot's tray menu also links to Windows privacy settings.</p>
+      <p>PrivacyDot does not temporarily revoke an app's device permissions. Its force-quit action requires confirmation and can close all matching app processes, including multiple windows. Unsaved work may be lost, and closing an app affects its use of every device.</p>
+
+      <h2>How the detection works</h2>
+      <p>Microphone attribution reads active Core Audio capture sessions, including endpoint IDs and friendly names. Camera attribution uses the Windows sensor activity monitor where available. Windows privacy usage records provide a fallback when a device cannot be identified.</p>
+      <p>These are activity metadata sources. PrivacyDot does not open a camera, capture video frames, or record audio. The <a href="https://github.com/farflashgroup/PrivacyDot/tree/main/PrivacyDot">C# detection code is public</a> for inspection and contributions.</p>
+      <p>The app targets Windows 7 SP1 and newer with .NET Framework 4.8. Per-camera attribution requires Windows 10 version 1703 or newer. Older Windows versions have limited camera detection. All detection depends on what Windows and the device drivers report.</p>
+
+      <h2>Where the activity data goes</h2>
+      <p>Device activity stays on the PC. PrivacyDot collects no telemetry and uploads no device-usage data. It contacts GitHub after startup and during manual update checks; downloading an update requires confirmation. The <a href="privacy.html">privacy details</a> explain these connections and local preferences.</p>
+      <div class="actions"><a class="button primary" href="https://github.com/farflashgroup/PrivacyDot/releases/latest">Get PrivacyDot for Windows ↗</a><a class="text-link" href="https://github.com/farflashgroup/PrivacyDot">Explore the MIT source ↗</a></div>
+      <p class="status-note">Written by the PrivacyDot publisher. Behavior checked against v0.3.1. Detection is best-effort.</p>
+    </article>
+  </main>
+  <footer class="site-footer wrap"><a href="./">← Back to PrivacyDot</a></footer>
+</body>
+</html>

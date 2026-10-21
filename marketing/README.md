@@ -8,6 +8,9 @@ Public contact: **privacydot@farflash.com**. Prepared 2026-10-21 for the publish
 - [Directory copy](directory-copy.md): consistent facts plus paste-ready descriptions for different forms.
 - [Community launch copy](community-posts.md): original launch posts, technical explanation, and follow-up posts.
 - [30-day launch plan](launch-plan.md): sequencing, measurement, and maintenance.
+- [Localized blurbs](localized-copy.md): descriptions in all eight interface languages.
+- [Website hosting](hosting.md): custom hostname, DNS record, and deployment checks.
+- [Public activity guide](../docs/windows-microphone-camera-indicator.html): installation, tray colors, device grouping, and detection limits.
 - [Product facts](product-facts.json): structured source for future listings.
 - [Public website](../docs/index.html) and [press/resources page](../docs/press.html).
 
