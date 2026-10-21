@@ -5,7 +5,7 @@
 <h1 align="center">PrivacyDot</h1>
 
 <p align="center">
-  A tiny Windows tray privacy indicator for microphone and camera activity.
+  See which apps are using your microphone and camera, right from your Windows tray.
 </p>
 
 <p align="center">
@@ -14,6 +14,12 @@
   <a href="LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT-green"></a>
   <img alt="Platform" src="https://img.shields.io/badge/platform-Windows%207%20SP1%2B-0078d4">
   <img alt=".NET Framework" src="https://img.shields.io/badge/.NET%20Framework-4.8-512bd4">
+</p>
+
+<p align="center">
+  <a href="https://farflashgroup.github.io/PrivacyDot/">Website &amp; demo</a> ·
+  <a href="https://github.com/farflashgroup/PrivacyDot/releases/latest/download/PrivacyDotSetup.exe">Download for Windows</a> ·
+  <a href="https://farflashgroup.github.io/PrivacyDot/press.html">Logo, screenshots &amp; listing kit</a>
 </p>
 
 PrivacyDot sits in the Windows notification area and gives you a quick visual read on device use:
@@ -104,3 +110,9 @@ PrivacyDot runs without administrator privileges, bounds registry traversal and 
 ## License
 
 PrivacyDot is open source under the [MIT License](LICENSE).
+
+## Share PrivacyDot
+
+Use the [app listing kit](https://farflashgroup.github.io/PrivacyDot/press.html) for official descriptions, the logo, screenshots, and launch graphics. Screenshots contain illustrative app and device data. For product and directory questions: [privacydot@farflash.com](mailto:privacydot@farflash.com).
+
+The repository's [marketing kit](marketing/README.md) includes directory copy, community launch posts, a submission tracker, and a launch plan. Detection is best-effort; avoid describing PrivacyDot as a permission blocker or guaranteed surveillance detector.

@@ -1,0 +1,76 @@
+<!doctype html>
+<!-- THESIS: An activity indicator should explain itself in a glance.
+OWN-WORLD: Existing PrivacyDot green/orange signals, charcoal UI, and clear Windows typography.
+STORY: Understand the dot, inspect real interface examples, read privacy limits, download.
+FIRST VIEWPORT: Large left headline and download action; an interactive signal demonstration at right.
+FORM: Product demonstration extending the existing app identity; no new brand identity. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#11161b">
+  <title>PrivacyDot — Microphone & camera activity in your Windows tray</title>
+  <meta name="description" content="See detected microphone and camera activity in the Windows tray. Click for apps grouped by device. Free, open source, and no telemetry.">
+  <link rel="canonical" href="https://farflashgroup.github.io/PrivacyDot/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="PrivacyDot — A small dot. A clearer picture.">
+  <meta property="og:description" content="See detected microphone and camera activity in your Windows tray. Free and open source.">
+  <meta property="og:url" content="https://farflashgroup.github.io/PrivacyDot/">
+  <meta property="og:image" content="https://farflashgroup.github.io/PrivacyDot/assets/privacydot-social.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="assets/privacydot-logo.png" type="image/png">
+  <link rel="stylesheet" href="styles.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"PrivacyDot","url":"https://farflashgroup.github.io/PrivacyDot/","operatingSystem":"Windows","applicationCategory":"UtilitiesApplication","description":"Windows tray indicator for detected microphone and camera activity, with apps grouped by device.","downloadUrl":"https://github.com/farflashgroup/PrivacyDot/releases/latest","softwareRequirements":".NET Framework 4.8. Detection capabilities vary with Windows version and drivers.","license":"https://github.com/farflashgroup/PrivacyDot/blob/main/LICENSE","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"codeRepository":"https://github.com/farflashgroup/PrivacyDot","inLanguage":["en","fr","es","ja","zh-Hans","hi","ar","ru"]}</script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header wrap">
+    <a class="brand" href="./" aria-label="PrivacyDot home"><img src="assets/privacydot-logo.png" alt="" width="36" height="36">PrivacyDot</a>
+    <nav aria-label="Main navigation"><a href="#how-it-works">How it works</a><a href="#privacy">Privacy</a><a href="press.html">Resources</a><a href="https://github.com/farflashgroup/PrivacyDot">GitHub <span aria-hidden="true">↗</span></a></nav>
+  </header>
+  <main id="main">
+    <section class="hero wrap">
+      <div class="hero-copy">
+        <p class="kicker">For the Windows notification area</p>
+        <h1>A small dot.<br>A clearer picture.</h1>
+        <p class="lead">See which apps are using your microphone and camera, right from your Windows tray.</p>
+        <p class="hero-detail">A color for detected activity. One click for the apps and devices behind it.</p>
+        <div class="actions"><a class="button primary" href="https://github.com/farflashgroup/PrivacyDot/releases/latest/download/PrivacyDotSetup.exe">Download for Windows <span aria-hidden="true">↓</span></a><a class="text-link" href="https://github.com/farflashgroup/PrivacyDot">Explore the source <span aria-hidden="true">↗</span></a></div>
+        <p class="install-note">Free · MIT licensed · No administrator privileges required</p>
+        <p class="small">Requires .NET Framework 4.8. <a href="#compatibility">Compatibility and installer details</a></p>
+      </div>
+      <div class="signal-demo" aria-labelledby="demo-heading">
+        <p class="demo-label" id="demo-heading">Meet your new tray indicator</p>
+        <div class="signal-stage"><div class="signal-dot both" id="signal" aria-hidden="true"></div></div>
+        <p class="signal-state" id="signal-state" aria-live="polite">Microphone + camera detected</p>
+        <div class="signal-options" role="group" aria-label="Preview indicator states">
+          <button type="button" data-state="idle" aria-pressed="false"><span class="mini-dot idle"></span>No use detected</button>
+          <button type="button" data-state="mic" aria-pressed="false"><span class="mini-dot mic"></span>Microphone</button>
+          <button type="button" data-state="camera" aria-pressed="false"><span class="mini-dot camera"></span>Camera</button>
+          <button type="button" data-state="both" aria-pressed="true"><span class="mini-dot both"></span>Both</button>
+        </div>
+        <p class="demo-note">Interactive illustration. This website does not access your devices.</p>
+      </div>
+    </section>
+    <section class="manifesto"><div class="wrap manifesto-inner"><h2>Less hunting through settings.<br>More knowing at a glance.</h2><p>Keep an eye on detected activity between calls, while streaming, or whenever several microphones and cameras are connected.</p></div></section>
+    <section class="walkthrough wrap" id="how-it-works">
+      <div class="section-intro"><p class="kicker">One click closer</p><h2>The app. <br>The device. <br>The useful detail.</h2><p>Click the dot to open a view of detected microphone and camera activity. Apps appear under the device they use, so your headset and USB mic each get their own place.</p><p>If Windows cannot identify a device, PrivacyDot labels it <strong>Device not identified</strong>. It doesn't guess the default.</p></div>
+      <figure class="screenshot-figure"><div class="screenshot-toolbar" role="group" aria-label="Screenshot theme"><button type="button" data-theme="dark" aria-pressed="true">Dark theme</button><button type="button" data-theme="light" aria-pressed="false">Light theme</button></div><div class="screenshot-mat" id="screenshot-mat"><img id="app-screenshot" src="screenshots/popup-dark.png" alt="PrivacyDot dark theme popup showing illustrative detected apps grouped under Headset Microphone, USB Microphone, Integrated Camera, and Logitech Brio" width="390" height="405" loading="lazy"></div><figcaption>Actual PrivacyDot interface with illustrative app and device data.</figcaption></figure>
+    </section>
+    <section class="details-band"><div class="wrap detail-columns"><div><h3>At home in Windows.</h3><p>Light and dark themes follow your Windows app theme. Start with Windows if you choose, then keep the indicator close to the clock.</p></div><div><h3>In your language.</h3><p>English, French, Spanish, Japanese, Simplified Chinese, Hindi, Arabic, and Russian. Follow your system language or choose your own.</p></div><div><h3>Open to inspection.</h3><p>Free software under the MIT License. Read the C# source, report a reproducible issue, or help improve device detection.</p></div></div></section>
+    <section class="privacy-section wrap" id="privacy"><div><p class="kicker">Your activity stays yours</p><h2>Local observation.<br>No usage uploads.</h2></div><div class="privacy-copy"><p>PrivacyDot reads activity metadata from Windows. It does not open a camera, capture frames, or record audio.</p><p>There is no telemetry, and device-usage data is not sent anywhere. The app contacts GitHub for startup and manual update checks. Downloading an update requires your confirmation.</p><p class="important">Detection is best-effort and depends on Windows and your drivers. PrivacyDot is an activity indicator, not a permission blocker or a guarantee against hidden recording.</p><a class="text-link" href="privacy.html">Read the privacy details <span aria-hidden="true">↗</span></a></div></section>
+    <section class="faq-section wrap" id="compatibility"><div><p class="kicker">Before you install</p><h2>A few practical details.</h2></div><div class="faq-list">
+      <details open><summary>Which versions of Windows does it support?</summary><p>PrivacyDot targets Windows 7 SP1 and newer with .NET Framework 4.8. Detection capabilities vary. Per-camera attribution requires Windows 10 version 1703 or newer and the sensor activity monitor; older Windows versions have limited camera detection.</p></details>
+      <details><summary>How do I install it?</summary><p>Download <strong>PrivacyDotSetup.exe</strong> from the official GitHub release and run it. It installs to your local app data folder, creates Start Menu and Startup shortcuts, checks for .NET Framework 4.8, and launches the app. Administrator privileges are not required. You can change startup behavior in Settings.</p><p>The current release is unsigned and Windows may show a publisher warning. Review the source and release information before deciding to run it.</p></details>
+      <details><summary>Does a gray dot mean nothing is recording?</summary><p>Gray means no microphone or camera activity was detected through the available Windows sources. It cannot prove that every capture path is inactive.</p></details>
+      <details><summary>Can it block an app from using my devices?</summary><p>Temporary per-app permission revocation is not currently available. Use the app's own controls or Windows privacy settings. PrivacyDot can force quit eligible matching app processes after a second confirmation; this can close multiple windows and lose unsaved work.</p></details>
+      <details><summary>What if a device or app is missing?</summary><p>Detection depends on Windows, the capture path, and the driver. Please <a href="https://github.com/farflashgroup/PrivacyDot/issues">report a reproducible issue</a> with your Windows version and device details. Remove private information before posting diagnostics.</p></details>
+    </div></section>
+    <section class="closing"><div class="wrap closing-inner"><div><h2>Keep the dot.<br>Know what's detected.</h2><p>Free, open-source microphone and camera visibility for Windows.</p></div><a class="button primary" href="https://github.com/farflashgroup/PrivacyDot/releases/latest/download/PrivacyDotSetup.exe">Get PrivacyDot <span aria-hidden="true">↓</span></a></div></section>
+  </main>
+  <footer class="wrap site-footer"><a class="brand" href="./"><img src="assets/privacydot-logo.png" alt="" width="28" height="28">PrivacyDot</a><div><a href="https://github.com/farflashgroup/PrivacyDot/releases">Releases</a><a href="privacy.html">Privacy</a><a href="press.html">Resources</a><a href="https://github.com/farflashgroup/PrivacyDot/blob/main/LICENSE">MIT License</a><a href="mailto:privacydot@farflash.com">Contact</a></div><p>Independent open-source software. Not affiliated with Microsoft.</p></footer>
+  <script src="site.js" defer></script>
+</body>
+</html>

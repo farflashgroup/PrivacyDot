@@ -1,0 +1,30 @@
+{
+  "name": "PrivacyDot",
+  "tagline": "See which apps are using your microphone and camera.",
+  "category": "Windows privacy utility",
+  "repository": "https://github.com/farflashgroup/PrivacyDot",
+  "website": "https://farflashgroup.github.io/PrivacyDot/",
+  "downloadPage": "https://github.com/farflashgroup/PrivacyDot/releases/latest",
+  "downloadUrl": "https://github.com/farflashgroup/PrivacyDot/releases/latest/download/PrivacyDotSetup.exe",
+  "contact": "privacydot@farflash.com",
+  "license": "MIT",
+  "price": 0,
+  "currency": "USD",
+  "platform": "Windows",
+  "minimumTarget": "Windows 7 SP1 with .NET Framework 4.8; detection capabilities vary by Windows version and driver",
+  "cameraAttributionRequirement": "Windows 10 version 1703 or newer with the sensor activity monitor available",
+  "languages": ["English", "French", "Spanish", "Japanese", "Simplified Chinese", "Hindi", "Modern Standard Arabic", "Russian"],
+  "release": {
+    "version": "0.3.1",
+    "publishedAt": "2026-10-21T05:04:40Z",
+    "installer": "PrivacyDotSetup.exe",
+    "sizeBytes": 246272,
+    "sha256": "aad730827b0c0000e5277961a4fdecfbab674add6fdc234eea0db9bcbbd7720f",
+    "codeSigned": false
+  },
+  "features": ["Four tray states", "Detected apps grouped by microphone or camera", "Dark and light themes", "Eight interface languages", "Per-user installation without administrator privileges", "Optional startup behavior", "User-confirmed update downloads", "Confirmed force quit for eligible matching processes"],
+  "privacy": "No telemetry or device-usage uploads. Detection reads local Windows metadata without recording audio/video. GitHub is contacted for update checks; installer downloads require confirmation.",
+  "limitations": ["Best-effort detection depends on Windows and drivers", "Older Windows versions have limited camera detection", "No temporary per-app permission revocation", "Force quit may close multiple matching windows and lose unsaved work", "Screenshots show illustrative app/device data"],
+  "verifiedOn": "2026-10-21",
+  "sources": ["../README.md", "../LICENSE", "../PrivacyDot/PrivacyDot.csproj", "https://github.com/farflashgroup/PrivacyDot/releases/tag/v0.3.1"]
+}
