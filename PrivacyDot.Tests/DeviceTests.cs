@@ -136,8 +136,13 @@ internal static class DeviceTests
         var elapsed = Stopwatch.StartNew();
         while (elapsed.ElapsedMilliseconds < 2000) { Application.DoEvents(); Thread.Sleep(20); }
         Console.WriteLine($"Camera monitor available: {cameras.IsAvailable}; callbacks received: {cameras.ReportsReceived}");
-        foreach (var entry in new CoreAudioUsageReader().GetActiveMicrophoneApps().Concat(cameras.GetActiveCameraApps()))
+        var liveEntries = new CoreAudioUsageReader().GetActiveMicrophoneApps().Concat(cameras.GetActiveCameraApps()).ToArray();
+        foreach (var entry in liveEntries)
             Console.WriteLine($"{entry.Kind}: {entry.DeviceName ?? "(unnamed)"} [{entry.DeviceId ?? "unidentified"}] <- {entry.DisplayName}");
+        var snapshot = DeviceUsageSnapshot.FromEntries(new RegistryUsageReader().GetActiveUsage().Concat(liveEntries));
+        Console.WriteLine($"Combined snapshot: {snapshot.MicrophoneApps.Count} microphone apps; {snapshot.CameraApps.Count} camera apps");
+        foreach (var entry in snapshot.MicrophoneApps.Concat(snapshot.CameraApps))
+            Console.WriteLine($"{entry.Kind} ({entry.Source}): {entry.DisplayName}");
     }
 
     public static void RenderScreenshots(string directory)

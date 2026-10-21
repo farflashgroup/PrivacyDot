@@ -108,6 +108,8 @@ var tests = new (string Name, Action Run)[]
     ("NonPackaged container is skipped", TestNonPackagedContainer),
     ("Stale Slack microphone record is suppressed", TestStaleSlackRecordIsSuppressed),
     ("Running Slack microphone record is retained", TestRunningSlackRecordIsRetained),
+    ("Restarted Slack does not revive an old microphone record", TestRestartedSlackRecordIsSuppressed),
+    ("Slack process lifetimes preserve live and uncertain records", TestSlackProcessLifetimes),
     ("Uncertain Slack process state is retained", TestUncertainSlackRecordIsRetained),
     ("Slack correction rejects look-alike records", TestSlackLookAlikesAreRetained),
     ("Slack correction is limited to stale registry microphone records", TestSlackCorrectionScope),
@@ -216,7 +218,7 @@ static void TestStaleSlackRecordIsSuppressed()
         0L,
         fixture.LocalAppData,
         fixture.UtcNow,
-        _ => ProcessPresence.NotRunning);
+        (_, _) => ProcessPresence.NotRunning);
 
     Assert(suppressed, "Expected an old stop-less Slack record to be suppressed when its process is absent.");
 }
@@ -230,9 +232,51 @@ static void TestRunningSlackRecordIsRetained()
         0L,
         fixture.LocalAppData,
         fixture.UtcNow,
-        _ => ProcessPresence.Running);
+        (_, _) => ProcessPresence.Running);
 
     Assert(!suppressed, "Expected a record for a running Slack process to remain visible.");
+}
+
+static void TestRestartedSlackRecordIsSuppressed()
+{
+    var fixture = CreateSlackGuardFixture();
+    var restartedProcesses = new (string? Path, DateTime? StartedUtc)[]
+    {
+        (fixture.Entry.Identity, fixture.UtcNow.AddMinutes(-2)),
+        (fixture.Entry.Identity, fixture.UtcNow.AddMinutes(-1))
+    };
+    var suppressed = SlackStaleUsageGuard.ShouldSuppress(
+        fixture.Entry, fixture.OldStart, 0L, fixture.LocalAppData, fixture.UtcNow,
+        (path, started) => SlackStaleUsageGuard.GetProcessPresence(path, started, restartedProcesses));
+    Assert(suppressed, "Expected an old capture from before every current Slack process to be suppressed.");
+
+    var liveEntry = fixture.Entry.WithSource(UsageSource.CoreAudio).WithDevice("headset", "Headset mic");
+    var snapshot = DeviceUsageSnapshot.FromEntries(
+        (suppressed ? Array.Empty<DeviceUsageEntry>() : new[] { fixture.Entry }).Concat(new[] { liveEntry }));
+    Assert(snapshot.IsMicrophoneActive && snapshot.MicrophoneApps.Single().Source == UsageSource.CoreAudio,
+        "Expected live microphone activity to remain visible even when an old registry record is suppressed.");
+}
+
+static void TestSlackProcessLifetimes()
+{
+    var fixture = CreateSlackGuardFixture();
+    var started = DateTime.FromFileTimeUtc(fixture.OldStart);
+    var path = fixture.Entry.Identity;
+    ProcessPresence Presence(params (string? Path, DateTime? StartedUtc)[] processes)
+        => SlackStaleUsageGuard.GetProcessPresence(path, started, processes);
+
+    Assert(Presence((path, started.AddMinutes(1)), (path, started.AddMinutes(-1))) == ProcessPresence.Running,
+        "Expected an original process to preserve the warning even when its helpers restarted.");
+    Assert(Presence((path, started.AddSeconds(30))) == ProcessPresence.Running,
+        "Expected the process-start tolerance to preserve uncertain timing.");
+    Assert(Presence((path, started.AddSeconds(31))) == ProcessPresence.NotRunning,
+        "Expected a process outside the start tolerance not to revive old usage.");
+    Assert(Presence((path, started.AddMinutes(1)), (null, null)) == ProcessPresence.Unknown,
+        "Expected an unreadable process to prevent suppression.");
+    Assert(Presence((path, null)) == ProcessPresence.Unknown,
+        "Expected an unreadable start time to prevent suppression.");
+    Assert(Presence((path + ".other", started.AddMinutes(-1))) == ProcessPresence.NotRunning,
+        "Expected a different executable path not to revive this record.");
 }
 
 static void TestUncertainSlackRecordIsRetained()
@@ -244,14 +288,14 @@ static void TestUncertainSlackRecordIsRetained()
         0L,
         fixture.LocalAppData,
         fixture.UtcNow,
-        _ => ProcessPresence.Unknown);
+        (_, _) => ProcessPresence.Unknown);
     var errorSuppressed = SlackStaleUsageGuard.ShouldSuppress(
         fixture.Entry,
         fixture.OldStart,
         0L,
         fixture.LocalAppData,
         fixture.UtcNow,
-        _ => throw new InvalidOperationException("Process inspection failed."));
+        (_, _) => throw new InvalidOperationException("Process inspection failed."));
 
     Assert(!unknownSuppressed, "Expected an unknown process state to retain the warning.");
     Assert(!errorSuppressed, "Expected a process inspection error to retain the warning.");
@@ -277,7 +321,7 @@ static void TestSlackLookAlikesAreRetained()
             0L,
             fixture.LocalAppData,
             fixture.UtcNow,
-            _ => ProcessPresence.NotRunning);
+            (_, _) => ProcessPresence.NotRunning);
 
         Assert(!suppressed, $"Expected look-alike Slack path to remain visible: {path}");
     }
@@ -321,7 +365,7 @@ static bool ShouldSuppressForTest(
         stop,
         fixture.LocalAppData,
         fixture.UtcNow,
-        _ => ProcessPresence.NotRunning);
+        (_, _) => ProcessPresence.NotRunning);
 }
 
 static (DeviceUsageEntry Entry, string LocalAppData, DateTime UtcNow, long OldStart) CreateSlackGuardFixture()

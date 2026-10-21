@@ -67,7 +67,9 @@ internal sealed class UsageActionButton : Button
         var graphics = e.Graphics;
         graphics.Clear(_hover || Focused ? _theme.MenuHover : _theme.PanelBack);
         graphics.SmoothingMode = SmoothingMode.AntiAlias;
-        var scale = DeviceDpi / 96f;
+        // Keep the full click target while making the regular action glyphs more compact.
+        var iconSize = Glyph == UsageActionGlyph.Warning ? 20f : 16f;
+        var scale = DeviceDpi / 96f * iconSize / 20f;
         var state = graphics.Save();
         graphics.TranslateTransform((Width - 20 * scale) / 2, (Height - 20 * scale) / 2);
         graphics.ScaleTransform(scale, scale);

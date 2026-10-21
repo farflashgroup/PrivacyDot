@@ -13,7 +13,9 @@ internal static class SlackStaleUsageGuard
 {
     // Keep this exception deliberately narrow: never trust a display name, an
     // unversioned directory, or an uncertain process query to hide a warning.
+    // A process launched after an old record cannot have started that capture.
     private static readonly TimeSpan MinimumStaleAge = TimeSpan.FromSeconds(30);
+    private static readonly TimeSpan ProcessStartTolerance = TimeSpan.FromSeconds(30);
 
     public static bool ShouldSuppress(
         DeviceUsageEntry entry,
@@ -35,7 +37,7 @@ internal static class SlackStaleUsageGuard
         object? lastUsedTimeStop,
         string localApplicationDataPath,
         DateTime utcNow,
-        Func<string, ProcessPresence> getProcessPresence)
+        Func<string, DateTime, ProcessPresence> getProcessPresence)
     {
         if (entry.Kind != DeviceKind.Microphone
             || entry.Source != UsageSource.PrivacyRegistry
@@ -48,7 +50,8 @@ internal static class SlackStaleUsageGuard
 
         try
         {
-            return getProcessPresence(entry.Identity) == ProcessPresence.NotRunning;
+            var usageStartedUtc = DateTime.FromFileTimeUtc(RegistryUsageParser.ConvertToInt64(lastUsedTimeStart));
+            return getProcessPresence(entry.Identity, usageStartedUtc) == ProcessPresence.NotRunning;
         }
         catch
         {
@@ -113,7 +116,7 @@ internal static class SlackStaleUsageGuard
         }
     }
 
-    private static ProcessPresence GetProcessPresence(string expectedExecutablePath)
+    private static ProcessPresence GetProcessPresence(string expectedExecutablePath, DateTime usageStartedUtc)
     {
         Process[] processes;
 
@@ -126,7 +129,7 @@ internal static class SlackStaleUsageGuard
             return ProcessPresence.Unknown;
         }
 
-        var encounteredUnknownPath = false;
+        var observations = new List<(string? Path, DateTime? StartedUtc)>();
 
         try
         {
@@ -134,20 +137,11 @@ internal static class SlackStaleUsageGuard
             {
                 try
                 {
-                    var processPath = process.MainModule?.FileName;
-
-                    if (string.IsNullOrWhiteSpace(processPath))
-                    {
-                        encounteredUnknownPath = true;
-                    }
-                    else if (PathsEqual(processPath!, expectedExecutablePath))
-                    {
-                        return ProcessPresence.Running;
-                    }
+                    observations.Add((process.MainModule?.FileName, process.StartTime.ToUniversalTime()));
                 }
                 catch
                 {
-                    encounteredUnknownPath = true;
+                    observations.Add((null, null));
                 }
             }
         }
@@ -159,7 +153,31 @@ internal static class SlackStaleUsageGuard
             }
         }
 
-        return encounteredUnknownPath ? ProcessPresence.Unknown : ProcessPresence.NotRunning;
+        return GetProcessPresence(expectedExecutablePath, usageStartedUtc, observations);
+    }
+
+    internal static ProcessPresence GetProcessPresence(
+        string expectedExecutablePath,
+        DateTime usageStartedUtc,
+        IEnumerable<(string? Path, DateTime? StartedUtc)> processes)
+    {
+        var encounteredUnknownProcess = false;
+        foreach (var process in processes)
+        {
+            if (string.IsNullOrWhiteSpace(process.Path))
+            {
+                encounteredUnknownProcess = true;
+            }
+            else if (PathsEqual(process.Path!, expectedExecutablePath))
+            {
+                if (process.StartedUtc is null)
+                    encounteredUnknownProcess = true;
+                else if (process.StartedUtc.Value - usageStartedUtc <= ProcessStartTolerance)
+                    return ProcessPresence.Running;
+            }
+        }
+
+        return encounteredUnknownProcess ? ProcessPresence.Unknown : ProcessPresence.NotRunning;
     }
 
     private static bool PathsEqual(string left, string right)
