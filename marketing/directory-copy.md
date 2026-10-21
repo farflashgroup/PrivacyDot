@@ -7,7 +7,7 @@ All descriptions are original. Facts checked against the repository and publishe
 | Field | Value |
 | --- | --- |
 | Name | PrivacyDot |
-| Developer / publisher | farflashgroup (GitHub project owner) |
+| Developer / publisher | FarFlash Group Ltd. (farflashgroup on GitHub) |
 | Contact | privacydot@farflash.com |
 | Website | https://privacydot.farflash.com/ |
 | Source | https://github.com/farflashgroup/PrivacyDot |
@@ -64,6 +64,26 @@ Choose Free + Open Source + MIT; platform Windows. Use the standard or long desc
 ## LibHunt
 
 Find a project whose primary function is displaying microphone/camera activity, then use its “Suggest alternative” route with the source repository URL. Explain the Windows platform difference if the existing project is macOS-only. Do not imply identical functionality or submit against an unrelated project simply to obtain a listing.
+
+## SaaSHub
+
+Submitted on October 21, 2026 through the free queue. The submission is pending approval; the tracker records remaining image and account steps.
+
+- Tagline: Free Windows tray indicator for detected microphone and camera activity, with apps grouped by device.
+- Categories: Privacy; Security & Privacy; Utilities.
+- Platform: Windows desktop. Free option: Yes. Paid option: No. Free trial: No.
+- Related alternatives: OverSight and Micro Snitch. Both are macOS products with a related monitoring purpose; PrivacyDot is for Windows. Do not imply they run on the same platform or have identical functionality.
+- Source: https://github.com/farflashgroup/PrivacyDot
+
+Prepared publisher Q&A, **not posted**:
+
+**Which are the primary technologies used for building PrivacyDot?**
+
+Publisher answer: PrivacyDot is built with C# and Windows Forms on .NET Framework 4.8. It reads Core Audio capture sessions for microphone attribution and the Windows sensor activity monitor for camera attribution on supported Windows versions, with Windows privacy usage records as a fallback. Detection observes metadata without recording audio/video. The MIT-licensed source is public on GitHub.
+
+**How would you describe the primary audience of PrivacyDot?**
+
+Publisher answer: PrivacyDot is intended for Windows users who want a persistent, glanceable view of detected microphone and camera activity. Device grouping can help people using a headset, USB microphone, and webcam together. It is also intended for developers who want to inspect or contribute to a small open-source Windows utility. These are intended use cases, not measured customer demographics or adoption claims.
 
 ## Awesome-list entry
 
