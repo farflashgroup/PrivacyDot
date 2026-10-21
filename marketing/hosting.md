@@ -14,7 +14,9 @@ Do not include `/PrivacyDot` in the DNS target. The site uses relative asset lin
 
 Canonical URLs, Open Graph URLs, structured data, sitemap, README, directory copy, product facts, and the downloadable listing kit use the custom hostname. When changing hosting, update these together. The open Awesome Free Apps PR also uses the custom hostname; LibHunt's homepage change was submitted for moderation.
 
-At 02:30 EDT on October 21, 2026, the CNAME resolved publicly and the site served over HTTP. GitHub Pages displayed “Certificate Requested” at step 1 of 3, with HTTPS enforcement disabled until issuance. This is a pending deployment step, not a verified HTTPS launch.
+At 02:34 EDT on October 21, 2026, GitHub approved the certificate and HTTPS enforcement was enabled. Normal certificate validation returned HTTP 200 for the custom hostname. Both the old GitHub Pages address and the HTTP custom-domain address returned permanent redirects to `https://privacydot.farflash.com/`.
+
+All four HTML pages, the stylesheet/script, sitemap, robots file, screenshots, social graphic, and downloadable listing ZIP were verified over HTTPS. Desktop and mobile browser checks found no horizontal overflow; the landing page controls and guide images loaded correctly. Both the application Build and Pages deployment workflows passed for commit `cb0b6ce`.
 
 ## Read-only deployment checks
 
