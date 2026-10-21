@@ -17,9 +17,9 @@
 </p>
 
 <p align="center">
-  <a href="https://farflashgroup.github.io/PrivacyDot/">Website &amp; demo</a> ·
+  <a href="https://privacydot.farflash.com/">Website &amp; demo</a> ·
   <a href="https://github.com/farflashgroup/PrivacyDot/releases/latest/download/PrivacyDotSetup.exe">Download for Windows</a> ·
-  <a href="https://farflashgroup.github.io/PrivacyDot/press.html">Logo, screenshots &amp; listing kit</a>
+  <a href="https://privacydot.farflash.com/press.html">Logo, screenshots &amp; listing kit</a>
 </p>
 
 PrivacyDot sits in the Windows notification area and gives you a quick visual read on device use:
@@ -113,6 +113,6 @@ PrivacyDot is open source under the [MIT License](LICENSE).
 
 ## Share PrivacyDot
 
-Use the [app listing kit](https://farflashgroup.github.io/PrivacyDot/press.html) for official descriptions, the logo, screenshots, and launch graphics. Screenshots contain illustrative app and device data. For product and directory questions: [privacydot@farflash.com](mailto:privacydot@farflash.com).
+Use the [app listing kit](https://privacydot.farflash.com/press.html) for official descriptions, the logo, screenshots, and launch graphics. Screenshots contain illustrative app and device data. For product and directory questions: [privacydot@farflash.com](mailto:privacydot@farflash.com).
 
 The repository's [marketing kit](marketing/README.md) includes directory copy, community launch posts, a submission tracker, and a launch plan. Detection is best-effort; avoid describing PrivacyDot as a permission blocker or guaranteed surveillance detector.

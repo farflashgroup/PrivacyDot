@@ -9,7 +9,7 @@ All descriptions are original. Facts checked against the repository and publishe
 | Name | PrivacyDot |
 | Developer / publisher | farflashgroup (GitHub project owner) |
 | Contact | privacydot@farflash.com |
-| Website | https://farflashgroup.github.io/PrivacyDot/ |
+| Website | https://privacydot.farflash.com/ |
 | Source | https://github.com/farflashgroup/PrivacyDot |
 | Download page | https://github.com/farflashgroup/PrivacyDot/releases/latest |
 | Direct installer | https://github.com/farflashgroup/PrivacyDot/releases/latest/download/PrivacyDotSetup.exe |

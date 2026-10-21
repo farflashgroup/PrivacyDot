@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://farflashgroup.github.io/PrivacyDot/sitemap.xml
+Sitemap: https://privacydot.farflash.com/sitemap.xml
