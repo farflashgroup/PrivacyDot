@@ -67,7 +67,7 @@ Find a project whose primary function is displaying microphone/camera activity, 
 
 ## SaaSHub
 
-Submitted on October 21, 2026 through the free queue. The submission is pending approval; the tracker records remaining image and account steps.
+Submitted on October 21, 2026 through the free queue. Website ownership is verified and the listing is linked to the owner's account. The logo, two captioned screenshots, and the publisher Q&A below are saved. The listing is still pending moderation approval.
 
 - Tagline: Free Windows tray indicator for detected microphone and camera activity, with apps grouped by device.
 - Categories: Privacy; Security & Privacy; Utilities.
@@ -75,7 +75,7 @@ Submitted on October 21, 2026 through the free queue. The submission is pending 
 - Related alternatives: OverSight and Micro Snitch. Both are macOS products with a related monitoring purpose; PrivacyDot is for Windows. Do not imply they run on the same platform or have identical functionality.
 - Source: https://github.com/farflashgroup/PrivacyDot
 
-Prepared publisher Q&A, **not posted**:
+Publisher Q&A posted on October 21, 2026:
 
 **Which are the primary technologies used for building PrivacyDot?**
 

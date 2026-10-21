@@ -29,3 +29,7 @@ curl.exe -I https://privacydot.farflash.com/
 DNS being saved does not establish that HTTPS is ready. Verify the custom hostname with normal certificate validation and enable GitHub Pages HTTPS enforcement after the certificate is issued. Never bypass a certificate warning to declare a deployment successful.
 
 App installers remain on the official GitHub Releases page. The marketing website does not run an updater or request device access.
+
+## Directory ownership verification
+
+The homepage includes a `saashub-verification` meta tag for the owner's SaaSHub account. The live HTTPS page was checked for the expected tag before confirming ownership. SaaSHub then showed ACTIVE verification, restored account management of PrivacyDot, and accepted the official logo, both captioned screenshots, and two publisher Q&A answers. Verification is separate from moderation approval; the directory listing is still in the free approval queue as of October 21, 2026.
